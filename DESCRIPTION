@@ -1,21 +1,23 @@
 Package: SETr
 Type: Package
+Date: 2018-12-07
 Title: Gather and analyze SET-MH data to assess marsh elevation trends 
 Version: 0.1.0
-Author@R: person("Adam", "Starke", email = "astarke@tnc.org", role = c("aut", "cre"))
-Maintainer: The package maintainer <yourself@somewhere.net>
+Authors@R: person("Adam", "Starke", email = "astarke@tnc.org", role = c("aut", "cre"))
+Maintainer:  Adam Starke <astarke@tnc.org>
 Description: View, manage, analyze and visualize SET-MH data.
     Specifically for use along side the Marsh Elevation Monitoring Database (v.2.94) developed by the National Park Services
     Inventory and Monitoring .
-License: What license is it under?
+License: GPL-3 + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports:
     broom,
     tidyverse,
-    RODBC,
+    odbc,
+    DBI,
     sf,
     mapview,
     dplyr
-RoxygenNote: 6.1.0.9000
+RoxygenNote: 6.1.1
 Suggests: testthat

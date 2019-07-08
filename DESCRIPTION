@@ -13,11 +13,13 @@ Encoding: UTF-8
 LazyData: true
 Imports:
     broom,
+    DBI,
+    dplyr,
+    lubridate,
+    magrittr,
     tidyverse,
     odbc,
-    DBI,
     sf,
-    mapview,
-    dplyr
+    mapview
 RoxygenNote: 6.1.1
 Suggests: testthat

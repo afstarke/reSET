@@ -1,8 +1,10 @@
-#' SET_get functions that fetch data from provided database.
+#' SET_get_* functions that fetch data from provided database.
 #'
 # TODO: create set_get_xx functions to fetch the following
-# DONE: set_get_DB make a data base connection.  IDEA: database info, location, perhaps type of database? For future expansion to other platforms.
-# DONE: set_get_stations return sf object with meta data on the station including elevation?
+# DONE: set_get_DB make a data base connection.
+# IDEA: database info, location, perhaps type of database? For future expansion to other platforms.
+# DONE: set_get_stations return sf object with meta data on
+# the station including elevation?
 # set_get_readers returns basic dataframe of SET readers
 # set_get_visits
 # set_get_
@@ -262,13 +264,61 @@ set_get_sets <- function(dbconn) {
     dplyr::mutate(Raw = as.numeric(Raw)) %>%
     dplyr::filter(!is.na(Raw))
 
+  SET.data.long <- SET.data.long %>%
+    dplyr::ungroup() %>%
+    dplyr::group_by(pin_ID) %>% # reinforce that the grouping is based on pins
+    dplyr::arrange(Date) %>%
+    dplyr::mutate(Change = as.numeric(Raw) - as.numeric(Raw[1])) %>%
+    dplyr::mutate(incrementalChange = c(NA, diff(Change)))
+
   attr(SET.data.long, 'Datainfo') <-"Full SET dataset including all measures in a LONG format" # give dataframe some metadata attributes
   attr(SET.data.long, 'Date of data retreival') <- format(lubridate::today(), '%b %d %Y')
 
 
   return(SET.data.long)
 }
-#
-# set_get_accretions <- function(dbconn){
-#
-# }
+
+#' set_get_accretions
+#'
+#' return a tidy, long form, tibble of Surface Accretion (SA) data.
+#'
+#' @param dbconn Connection to Database returned from set_get_db
+#'
+#' @return tibble containing SA data in long format
+#' @export
+#' @examples
+#' # ADD_EXAMPLES_HERE
+#'
+
+set_get_accretions <- function(dbconn){
+  if (!dbIsValid(dbconn)) {
+    warning("Connect to database prior to running any set_get operations.")
+  }
+
+  # Surface Accretion data
+  SAccret <- dbconn %>% dplyr::tbl("tbl_Accretion_Data")
+  SA_Layers <- dbconn %>% dplyr::tbl("tbl_Feldspar_Layers")
+  SA <- inner_join(SA_Layers, SAccret, by="Layer_ID") %>% dplyr::collect()
+
+  # Connect to tables containing set data. Munge here instead of bringing in to R env.
+
+  # SET_readers <- set_get_readers(dbconn)
+  SET_samplings <- set_get_samplingevents(dbconn)
+
+  SA.data <- inner_join(SA, SET_samplings %>% dplyr::select(-Location_ID), by="Event_ID")
+
+
+
+  SA.data.long <- SA.data %>%
+    tidyr::gather('measure', 'Accretion', Measure_1:Measure_6) %>%
+    dplyr::filter(!is.na(Accretion)) %>%
+    dplyr::select(Layer_ID, Layer_Label, Location_ID, Estab_Date, Start_Date, Accretion, Core_Type, Site_ID, Site_Name, Plot_Name, Organization) %>%
+    dplyr::mutate(DecYear = round((((as.numeric(difftime(Start_Date, Estab_Date, units = "days"))))/365),3)) %>%
+    dplyr::rename(Date = Start_Date)
+
+  attr(SA.data.long, 'Date of data retreival') <- format(lubridate::today(), '%b %d %Y')
+
+  return(SA.data.long)
+
+
+}

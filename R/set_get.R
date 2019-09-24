@@ -221,6 +221,7 @@ set_get_sets <- function(dbconn) {
       Arm_Direction,
       Site_Name,
       SET_Type,
+      Unit_Type,
       Stratafication:Plot_Name,
       Location_ID.x,
       Position_ID,
@@ -263,13 +264,14 @@ set_get_sets <- function(dbconn) {
     )) / 365), 3)) %>%
     dplyr::mutate(Raw = as.numeric(Raw)) %>%
     dplyr::filter(!is.na(Raw))
-
+  pins <- set_check_pins(SET.data.long)
   SET.data.long <- SET.data.long %>%
     dplyr::ungroup() %>%
     dplyr::group_by(pin_ID) %>% # reinforce that the grouping is based on pins
     dplyr::arrange(Date) %>%
     dplyr::mutate(Change = as.numeric(Raw) - as.numeric(Raw[1])) %>%
-    dplyr::mutate(incrementalChange = c(NA, diff(Change)))
+    dplyr::mutate(incrementalChange = c(NA, diff(Change))) %>%
+    dplyr::mutate(issuePin = pin_ID %in% pins$pin_ID)
 
   attr(SET.data.long, 'Datainfo') <-"Full SET dataset including all measures in a LONG format" # give dataframe some metadata attributes
   attr(SET.data.long, 'Date of data retreival') <- format(lubridate::today(), '%b %d %Y')
@@ -319,6 +321,45 @@ set_get_accretions <- function(dbconn){
   attr(SA.data.long, 'Date of data retreival') <- format(lubridate::today(), '%b %d %Y')
 
   return(SA.data.long)
+
+
+}
+
+
+#' set_get_pinlengths
+#'
+#' @param pin_numb numeric pin number most often passed in from an assigned column name.
+#' @param pin_table named vector pin number and pin length combinations, name being numeric pin number.
+#'
+#' @return numeric pin length in mm
+#' @export
+#'
+#' @examples
+
+
+set_get_pinlengths <- function(pin_numb, pin_table){
+  #TODO: add standard checks in R functions. Not sure this is the best method
+  if(!is.numeric(pin_numb)){
+    warning("Provide valid pin number")
+  }
+  # TODO: Need to find a good way to create named vector of pin lengths.
+  return(pin_table[[pin_numb]])
+}
+
+
+#' set_get_receiver_elevation
+#' Retreive deep SET-rod receiver height as measured at the top of the receiver. NAVD88 is standard.
+#' @param plotID
+#'
+#' @return numeric elevation, used for correcting raw SET measures to NAVD88 elevaitons.
+#' @export
+#'
+#' @examples
+#'
+set_get_receiver_elevation <- function(dbconn, plotID){
+  if (!dbIsValid(dbconn)) {
+    warning("Connect to database prior to running any set_get operations.")
+  }
 
 
 }

@@ -22,4 +22,6 @@ Imports:
     sf,
     mapview
 RoxygenNote: 6.1.1
-Suggests: testthat
+Suggests: 
+    shiny,
+    testthat

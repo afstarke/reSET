@@ -2,7 +2,7 @@
 % Please edit documentation in R/set_get.R
 \name{set_get_DB}
 \alias{set_get_DB}
-\title{SET_get functions that fetch data from provided database.}
+\title{SET_get_* functions that fetch data from provided database.}
 \usage{
 set_get_DB(dbPath)
 }

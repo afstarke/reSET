@@ -13,7 +13,7 @@ set_check_measures(dataSET)
 tibble containing SA data in long format
 }
 \description{
-returns a list of .
+returns a list of pins that have .
 }
 \examples{
 # ADD_EXAMPLES_HERE

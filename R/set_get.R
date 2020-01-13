@@ -67,11 +67,14 @@ set_get_stations <- function(dbconn) {
   # TODO: Elevation surveys will be conducted repeatedly through time so need to account for multiple measures on
   # at the same stations. Determine survey summary method to use (mean, 'best', etc)
   # TODO: Add a filter/query method to return only sites or projects of interest.
-  Elevations <- dbconn %>% tbl("tbl_Survey_Data")
+  # TODO: Determine how to handle elevation surveys. There's 2 locations for this data entry-
+  # 1 in the survey form and 1 in the site location data.
+  # Could pull all data from survey forms and average elevations and height- or do that internally in the DB and then pull that value from station info.
+  # Elevations <- dbconn %>% tbl("tbl_Survey_Data")
 
   StudyStations <- Sites %>%
     dplyr::left_join(Locations, by = "Site_ID") %>%
-    dplyr::left_join(Elevations, by = "Location_ID") %>%
+    # dplyr::left_join(Elevations, by = "Location_ID") %>%
     dplyr::collect() # execute query and get results.
   # Sites and Locations will be joined in munge by 'site_ID'
   # Use capwords function to standardize caps and revert Stratafication to as a factor
@@ -154,7 +157,7 @@ set_get_samplingevents <- function(dbconn){
     dplyr::tbl("tlu_Contacts") %>%
     dplyr::select(Contact_ID, Last_Name, First_Name, Organization) %>%
     dplyr::mutate(FullName = paste(First_Name, Last_Name, sep = " "))
-  EventContacts <- dbconn %>% dplyr::tbl("xref_Event_Contacts")
+  EventContacts <- dbconn %>% dplyr::tbl("xref_Event_Contacts") # sampling events with contact id names and roles.
   SET_readers <- EventContacts %>%
     dplyr::left_join(Contacts, by = "Contact_ID") %>%
     dplyr::select(Event_ID, Contact_ID, Contact_Role, Last_Name, First_Name, Organization, FullName) %>%
@@ -190,8 +193,6 @@ set_get_sets <- function(dbconn) {
   if (!dbIsValid(dbconn)) {
     warning("Connect to database prior to running any set_get operations.")
   }
-
-
   # Connect to tables containing set data. Munge here instead of bringing in to R env.
   SET_data <- dbconn %>% dplyr::tbl("tbl_SET_Data")
   SET_positions <- dbconn %>% dplyr::tbl("tbl_SET_Position")
@@ -211,11 +212,12 @@ set_get_sets <- function(dbconn) {
 
 
   # SET Rod data
-  SET <- dplyr::inner_join(SET_data, SET_positions, by = "Position_ID") %>% dplyr::collect()
+  # Join the measured SET pin data to the positions to convert Position_ID to a arm direction
+  SET <- dplyr::left_join(SET_data, SET_positions, by = "Position_ID") %>% dplyr::collect()
   # TODO: finish the munging steps in here to output the long format SET data with associated reader info.
-  SET.data <- inner_join(SET, SET_samplings, by="Event_ID")
+  SET.data <- dplyr::inner_join(SET, SET_samplings, by="Event_ID") %>% dplyr::collect()
   # Munge
-  SET.data <- SET.data %>%
+  SET.data1 <- SET.data %>%
     dplyr::select(
       Pin1:Pin9_Notes,
       Arm_Direction,
@@ -230,9 +232,9 @@ set_get_sets <- function(dbconn) {
       SET_Reader
     ) %>%
     dplyr::mutate(Stratafication = capwords(as.character(Stratafication)),
-                  Start_Date = as.Date(Start_Date))     # Eventually add a filter that will filter out only 'clean' readings
+                  Start_Date = as.Date(Start_Date))
 
-  SET.data.long <- SET.data %>%
+  SET.data.long <- SET.data1 %>%
     dplyr::select(
       Site_Name,
       Stratafication,
@@ -248,11 +250,12 @@ set_get_sets <- function(dbconn) {
     dplyr::group_by(Position_ID, Start_Date) %>%
     tidyr::gather(pin, measure, Pin1:Pin9_Notes) %>%
     dplyr::filter(!is.na(measure)) %>% # Remove NA from PinX_Notes
-    tidyr::separate(pin, c('name', 'note'), "_", remove = TRUE) %>%
+    tidyr::separate(pin, c('name', 'note'), "_", remove = TRUE, fill = "right") %>%
     tidyr::separate(name, c('name', 'Pin_number'), 3, remove = TRUE) %>%
     dplyr::mutate(key = ifelse(is.na(note), yes = "Raw", no = note)) %>%
     dplyr::select(-note,-name) %>%
-    tidyr::spread(key, measure) %>%
+    dplyr::group_by(Position_ID, Start_Date) %>%
+    tidyr::spread(key = key, value = measure) %>%
     dplyr::mutate(pin_ID = paste(Position_ID, Pin_number, sep = "_")) %>% # Above all transposing and repositioning dataframe.
     dplyr::ungroup() %>% # Below- adding columns, renaming variables, and reordering rows.
     dplyr::rename(Date = Start_Date, Location_ID = Location_ID.x) %>%  # rename SET reading date
@@ -264,6 +267,7 @@ set_get_sets <- function(dbconn) {
     )) / 365), 3)) %>%
     dplyr::mutate(Raw = as.numeric(Raw)) %>%
     dplyr::filter(!is.na(Raw))
+
   pins <- set_check_pins(SET.data.long)
   SET.data.long <- SET.data.long %>%
     dplyr::ungroup() %>%
@@ -347,7 +351,7 @@ set_get_pinlengths <- function(pin_numb, pin_table){
 }
 
 
-#' set_get_receiver_elevation
+#' set_get_receiver_elevations
 #' Retreive deep SET-rod receiver height as measured at the top of the receiver. NAVD88 is standard.
 #' @param plotID
 #'
@@ -356,10 +360,14 @@ set_get_pinlengths <- function(pin_numb, pin_table){
 #'
 #' @examples
 #'
-set_get_receiver_elevation <- function(dbconn, plotID){
+set_get_receiver_elevations <- function(dbconn){
   if (!dbIsValid(dbconn)) {
     warning("Connect to database prior to running any set_get operations.")
   }
-
+  surveys <- dbconn %>% dplyr::tbl("tbl_Survey_Data") %>%
+    dplyr::left_join(tbl(dbconn, "tbl_Locations")) %>%
+    dplyr::select(Survey_Date, Plot_Name, starts_with("Pipe"), Vertical_Datum, Plot_Name, "X_Coord", "Y_Coord") %>%
+    dplyr::collect()
+  return(surveys)
 
 }

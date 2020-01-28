@@ -364,6 +364,7 @@ set_get_receiver_elevations <- function(dbconn){
   if (!dbIsValid(dbconn)) {
     warning("Connect to database prior to running any set_get operations.")
   }
+  # TODO: determine how to incorporate the elevation survey data in this. Mean heights? Best measure? Where does that value get stored?
   surveys <- dbconn %>% dplyr::tbl("tbl_Survey_Data") %>%
     dplyr::left_join(tbl(dbconn, "tbl_Locations")) %>%
     dplyr::select(Survey_Date, Plot_Name, starts_with("Pipe"), Vertical_Datum, Plot_Name, "X_Coord", "Y_Coord") %>%

@@ -11,6 +11,9 @@ set_check_widget(dataSET)
 \arguments{
 \item{dataSET}{SET data set as provided by set_get_sets()}
 }
+\value{
+dataframe of selected points.
+}
 \description{
 set_check_widget
 Opens a Shiny widget that allows for browsing potetial data entry issues

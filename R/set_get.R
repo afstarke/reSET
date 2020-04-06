@@ -26,14 +26,15 @@ set_get_DB <- function(dbPath) {
   # TODO: Determine how to make connection 'Read-Only'. I have a fear
   # that with an open connection some hapless user could muggle up
   # the database with a call to DBI::dbRemove or something.
+
   # make sure the file exists before attempting to connect
   if (!file.exists(dbPath)) {
     warning("DB file does not exist at ", dbPath, "")
   }
   # Create connection strings
-  dbq_string <- paste0("Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=", dbPath)
+  dbq_string <- paste0("Driver={Microsoft Access Driver (*.mdb, *.accdb)};Dbq=", dbPath)
 
-  con <- DBI::dbConnect(odbc::odbc(),
+  con <- DBI::dbConnect(drv = odbc::odbc(),
     .connection_string = dbq_string
   )
   return(con)
@@ -156,8 +157,8 @@ set_get_samplingevents <- function(dbconn){
   Contacts <- dbconn %>%
     dplyr::tbl("tlu_Contacts") %>%
     dplyr::select(Contact_ID, Last_Name, First_Name, Organization) %>%
-    dplyr::mutate(FullName = paste(First_Name, Last_Name, sep = " "))
-  EventContacts <- dbconn %>% dplyr::tbl("xref_Event_Contacts") # sampling events with contact id names and roles.
+    dplyr::mutate(FullName = paste(First_Name, Last_Name, sep = " ")) %>% collect()
+  EventContacts <- dbconn %>% dplyr::tbl("xref_Event_Contacts") %>% collect() # sampling events with contact id names and roles.
   SET_readers <- EventContacts %>%
     dplyr::left_join(Contacts, by = "Contact_ID") %>%
     dplyr::select(Event_ID, Contact_ID, Contact_Role, Last_Name, First_Name, Organization, FullName) %>%
@@ -172,9 +173,9 @@ set_get_samplingevents <- function(dbconn){
 
   StudyStations <- set_get_stations(dbconn)
   Samplings <- dplyr::inner_join(StudyStations, Events, by= "Location_ID")
-  Samplings <- dplyr::inner_join(Samplings, SET_readers, by = "Event_ID")
+  Samplings2 <- dplyr::inner_join(Samplings, SET_readers, by = "Event_ID")
 
-  return(Samplings)
+  return(Samplings2)
 }
 
 
@@ -193,7 +194,7 @@ set_get_sets <- function(dbconn) {
   if (!dbIsValid(dbconn)) {
     warning("Connect to database prior to running any set_get operations.")
   }
-  # Connect to tables containing set data. Munge here instead of bringing in to R env.
+    # Connect to tables containing set data. Munge here instead of bringing in to R env.
   SET_data <- dbconn %>% dplyr::tbl("tbl_SET_Data")
   SET_positions <- dbconn %>% dplyr::tbl("tbl_SET_Position")
   SET_readers <- set_get_readers(dbconn)
@@ -215,8 +216,9 @@ set_get_sets <- function(dbconn) {
   # Join the measured SET pin data to the positions to convert Position_ID to a arm direction
   SET <- dplyr::left_join(SET_data, SET_positions, by = "Position_ID") %>% dplyr::collect()
   # TODO: finish the munging steps in here to output the long format SET data with associated reader info.
-  SET.data <- dplyr::inner_join(SET, SET_samplings, by="Event_ID") %>% dplyr::collect()
+  SET.data <- dplyr::inner_join(SET, SET_samplings, by="Event_ID") #%>% dplyr::collect()
   # Munge
+  # BUG: There's a set of duplicated values being introduced in here somewhere. Presumably by an indirect join with the Survey table
   SET.data1 <- SET.data %>%
     dplyr::select(
       Pin1:Pin9_Notes,
@@ -231,6 +233,7 @@ set_get_sets <- function(dbconn) {
       Organization,
       SET_Reader
     ) %>%
+    # reformat to clean up and set class appropriately
     dplyr::mutate(Stratafication = capwords(as.character(Stratafication)),
                   Start_Date = as.Date(Start_Date))
 
@@ -254,7 +257,7 @@ set_get_sets <- function(dbconn) {
     tidyr::separate(name, c('name', 'Pin_number'), 3, remove = TRUE) %>%
     dplyr::mutate(key = ifelse(is.na(note), yes = "Raw", no = note)) %>%
     dplyr::select(-note,-name) %>%
-    dplyr::group_by(Position_ID, Start_Date) %>%
+    dplyr::group_by(Position_ID, Start_Date) %>% distinct() %>%
     tidyr::spread(key = key, value = measure) %>%
     dplyr::mutate(pin_ID = paste(Position_ID, Pin_number, sep = "_")) %>% # Above all transposing and repositioning dataframe.
     dplyr::ungroup() %>% # Below- adding columns, renaming variables, and reordering rows.

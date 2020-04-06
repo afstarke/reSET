@@ -8,7 +8,7 @@ library(miniUI)
 
 
 
-detach("package:SETr", unload = TRUE)
+# detach("package:SETr", unload = TRUE)
 library(SETr)
 # Connect to DB and start pulling data:
 
@@ -17,8 +17,9 @@ library(SETr)
 # Function to calculate the standard error
 stder <- function(x){ sqrt(var(x,na.rm=TRUE)/length(na.omit(x)))}
 
-
-
+dupfields <- function(df){df %>% map(~anyDuplicated(.x)) %>% unlist() %>% c(.,nrows = nrow(df))}
+uniquefields <- function(df){df %>% map(~length(unique(.x))) %>% unlist() %>% c(.,nrows = nrow(df))}
+wtfields <- function(df){list(no.duplicates = dupfields(df), no.uniques = uniquefields(df))}
 
 SET.DB.path <- "T:/Coastal/Marsh-Wetlands/SET-MH_project/SET_Data/SET_Monitoring_Database/Database_storage/SET_DB_BE_ver_2.94_TNC_Master.mdb"
 

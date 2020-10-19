@@ -10,18 +10,18 @@
 #'
 #' @examples
 #'
-set_check_widget <- function(dataSET) {
+set_check_widget <- function(dataSET, val) {
 
 
-  ui <- miniPage(
-    gadgetTitleBar("SET measures QA widget",
-                   left = miniTitleBarCancelButton(),
-                   right = miniTitleBarButton(inputId = "done", label = "Done", primary = TRUE)),
-    miniContentPanel(
-      selectInput(inputId = "SETstation", choices = unique(dataSET$Plot_Name), label = "Select SET Study Site"),
-      selectInput(inputId = "Direction", choices = unique(dataSET$Arm_Direction), label = "Choose arm direction:"),
-      plotOutput("plot1", brush = "plot_brush"),
-      dataTableOutput(outputId = "dtable")
+  ui <- miniUI::miniPage(
+    miniUI::gadgetTitleBar("SET measures QA widget",
+                   left =  miniUI::miniTitleBarCancelButton(),
+                   right =  miniUI::miniTitleBarButton(inputId = "done", label = "Done", primary = TRUE)),
+    miniUI::miniContentPanel(
+      shiny::selectInput(inputId = "SETstation", choices = unique(dataSET$Plot_Name), label = "Select SET Study Site"),
+      shiny::selectInput(inputId = "Direction", choices = unique(dataSET$Arm_Direction), label = "Choose arm direction:"),
+      shiny::plotOutput("plot1", brush = "plot_brush"),
+      shiny::dataTableOutput(outputId = "dtable")
 
     )
   )
@@ -44,24 +44,18 @@ set_check_widget <- function(dataSET) {
         theme_minimal()
     })
     output$dtable <- renderDataTable({
-      brushedPoints(df = data() %>% select(-pin_ID),
+      shiny::brushedPoints(df = data() %>% select(-pin_ID),
                     brush = input$plot_brush, allRows = F, xvar = "Date", yvar = "incrementalChange")
     })
-    # output$info <- renderPrint({
-    #   brushedPoints(df = data(),
-    #                 brush = input$plot_brush, allRows = F, xvar = "Date", yvar = "incrementalChange")
-    # })
 
-
-
-    # When the Done button is clicked, return a value
+        # When the Done button is clicked, return a value
     observeEvent(input$done, {
-      selectedPts <- brushedPoints(data(), brush = input$plot_brush)
-      stopApp(selectedPts)
+      selectedPts <- shiny::brushedPoints(data(), brush = input$plot_brush)
+      shiny::stopApp(selectedPts)
     })
 }
 
 
-  runGadget(ui, server, viewer = browserViewer())
+  shiny::runGadget(ui, server, viewer = shiny::browserViewer())
 
 }

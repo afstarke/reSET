@@ -55,7 +55,7 @@ set_get_DB <- function(dbPath) {
 #' # studyStations <- set_get_DB(path) %>% set_get_stations()
 
 set_get_stations <- function(dbconn) {
-  if (!dbIsValid(dbconn)) {
+  if (!DBI::dbIsValid(dbconn)) {
     warning("Connect to database prior to running any set_get_* operations.")
   }
   # Connect to tables containing stations and site information. Munge here instead of bringing in to R env.
@@ -67,6 +67,7 @@ set_get_stations <- function(dbconn) {
     dplyr::select(-Unit_Code, -Sub_Unit_Code)
   # TODO: Elevation surveys will be conducted repeatedly through time so need to account for multiple measures on
   # at the same stations. Determine survey summary method to use (mean, 'best', etc)
+  # COMBAK: Fixed temporarily by entering the 'best available' survey data into the survey datasheet. Avoided some complexities and nuances with survey method variations across sites.
   # TODO: Add a filter/query method to return only sites or projects of interest.
   # TODO: Determine how to handle elevation surveys. There's 2 locations for this data entry-
   # 1 in the survey form and 1 in the site location data.
@@ -111,7 +112,7 @@ set_get_stations <- function(dbconn) {
 #' # ADD_EXAMPLES_HERE
 
 set_get_readers <- function(dbconn) {
-  if (!dbIsValid(dbconn)) {
+  if (!DBI::dbIsValid(dbconn)) {
     warning("Connect to database prior to running any set_get_* operations.")
   }
   # Events, Contacts and SET readers:
@@ -148,7 +149,7 @@ set_get_readers <- function(dbconn) {
 #' # ADD_EXAMPLES_HERE
 
 set_get_samplingevents <- function(dbconn){
-  if (!dbIsValid(dbconn)) {
+  if (!DBI::dbIsValid(dbconn)) {
     warning("Connect to database prior to running any set_get_* operations.")
   }
 
@@ -191,7 +192,7 @@ set_get_samplingevents <- function(dbconn){
 #' # ADD_EXAMPLES_HERE
 #'
 set_get_sets <- function(dbconn) {
-  if (!dbIsValid(dbconn)) {
+  if (!DBI::dbIsValid(dbconn)) {
     warning("Connect to database prior to running any set_get operations.")
   }
     # Connect to tables containing set data. Munge here instead of bringing in to R env.
@@ -300,7 +301,7 @@ set_get_sets <- function(dbconn) {
 #'
 
 set_get_accretions <- function(dbconn){
-  if (!dbIsValid(dbconn)) {
+  if (!DBI::dbIsValid(dbconn)) {
     warning("Connect to database prior to running any set_get operations.")
   }
 
@@ -364,7 +365,7 @@ set_get_pinlengths <- function(pin_numb, pin_table){
 #' @examples
 #'
 set_get_receiver_elevations <- function(dbconn){
-  if (!dbIsValid(dbconn)) {
+  if (!DBI::dbIsValid(dbconn)) {
     warning("Connect to database prior to running any set_get operations.")
   }
   # TODO: determine how to incorporate the elevation survey data in this. Mean heights? Best measure? Where does that value get stored?
@@ -375,3 +376,21 @@ set_get_receiver_elevations <- function(dbconn){
   return(surveys)
 
 }
+#' set_get_absolute_heights adjust the measured raw pin height to NAVD88 elevation
+#'
+#' @param pin_height numeric raw pin height (in mm) as measured in the field on the SET arm
+#' @param pin_numb number of pin associated with the measured height
+#' @param pin_table pin height table, created by user
+#' @param SETarmHt Distance (height in mm) from the receiver end to the top of the SET arm where pin heights are measured from.
+#' @param receiverHt NAVD88 elevation of the SET receiver in meters
+#'
+#' @return
+#' @export
+#'
+#' @examples
+set_get_absolute_heights <- function(pin_height, pin_numb, pin_table, SETarmHt, receiverHt){
+  pinLgth <- set_get_pinlengths(pin_numb = pin_numb, pin_table = pin_table)
+  absHt <- (receiverHt + (SETarmHt/1000) + (pin_height/1000)) - (pinLgth/1000)
+  return(absHt)
+}
+

@@ -8,8 +8,8 @@ library(miniUI)
 
 
 
-# detach("package:SETr", unload = TRUE)
-library(SETr)
+# detach("package:reSET", unload = TRUE)
+library(reSET)
 # Connect to DB and start pulling data:
 
 

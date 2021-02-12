@@ -379,7 +379,8 @@ set_get_receiver_elevations <- function(dbconn){
 #' set_get_absolute_heights adjust the measured raw pin height to NAVD88 elevation
 #'
 #' @param pin_height numeric raw pin height (in mm) as measured in the field on the SET arm
-#' @param pin_numb number of pin associated with the measured height
+#' @param pin_numb Pin number associated with the measured height recorded (pin_height).
+#' Pins are uniquely identified to eliminate variation between readings of the SET
 #' @param pin_table pin height table, created by user
 #' @param SETarmHt Distance (height in mm) from the receiver end to the top of the SET arm where pin heights are measured from.
 #' @param receiverHt NAVD88 elevation of the SET receiver in meters

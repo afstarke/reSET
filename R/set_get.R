@@ -6,13 +6,22 @@
 # DONE: set_get_stations return sf object with meta data on
 # the station including elevation?
 # set_get_readers returns basic dataframe of SET readers
-# set_get_visits
-# set_get_
+# set_get_samplingevents
+# set_get_sets
+# set_get_accretions
+# set_get_pinlengths
+# set_get_receiver_elevations
+# set_get_absolute_heights
 
 
 #' Get connected to from Access DB from which
 #'
-#' This function connects and returns information relating to the SET-MH database
+#' This function connects and returns information relating to the SET-MH database.
+#' Note: There can (will) be compatibility issues with the bit-versions of R and Access.
+#' The AccessDB that this function was designed around was built on a 32-bit version.
+#' The R bit-version must match to successfully connect so can be an issue.
+#' There is a work around available which allows both bit-versions to be installed side-by-side
+#' more info here: https://knowledge.autodesk.com/support/autocad/learn-explore/caas/sfdcarticles/sfdcarticles/How-to-install-64-bit-Microsoft-Database-Drivers-alongside-32-bit-Microsoft-Office.html
 #' @param dbPath file url for backend data base.
 #' @keywords SET-MH, SET, database
 #' @return an odbc connection object to a database to be used in piped operations for extracting data from DB. Primarily used in other functions.
@@ -26,6 +35,7 @@ set_get_DB <- function(dbPath) {
   # TODO: Determine how to make connection 'Read-Only'. I have a fear
   # that with an open connection some hapless user could muggle up
   # the database with a call to DBI::dbRemove or something.
+
 
   # make sure the file exists before attempting to connect
   if (!file.exists(dbPath)) {
@@ -65,13 +75,15 @@ set_get_stations <- function(dbconn) {
   Locations <- dbconn %>%
     dplyr::tbl("tbl_Locations") %>%
     dplyr::select(-Unit_Code, -Sub_Unit_Code)
-  # TODO: Elevation surveys will be conducted repeatedly through time so need to account for multiple measures on
-  # at the same stations. Determine survey summary method to use (mean, 'best', etc)
-  # COMBAK: Fixed temporarily by entering the 'best available' survey data into the survey datasheet. Avoided some complexities and nuances with survey method variations across sites.
+  # TODO: Elevation surveys will be conducted repeatedly through time so need to account for
+  # multiple measures on/at the same stations. Determine survey summary method to use (mean, 'best', etc)
+  # COMBAK: Fixed temporarily by entering the 'best available' survey data into the survey datasheet.
+  # Avoided some complexities and nuances with survey method variations across sites.
   # TODO: Add a filter/query method to return only sites or projects of interest.
   # TODO: Determine how to handle elevation surveys. There's 2 locations for this data entry-
   # 1 in the survey form and 1 in the site location data.
-  # Could pull all data from survey forms and average elevations and height- or do that internally in the DB and then pull that value from station info.
+  # Could pull all data from survey forms and average elevations and height- or do
+  # that internally in the DB and then pull that value from station info.
   # Elevations <- dbconn %>% tbl("tbl_Survey_Data")
 
   StudyStations <- Sites %>%
@@ -182,7 +194,7 @@ set_get_samplingevents <- function(dbconn){
 
 #' set_get_sets
 #'
-#' return a tidy, long form, tibble of SET data.
+#' return a tidy, long form, tibble of raw SET measurement data.
 #'
 #' @param dbconn Connection to Database returned from set_get_db
 #'
@@ -359,7 +371,8 @@ set_get_pinlengths <- function(pin_numb, pin_table){
 #' Retreive deep SET-rod receiver height as measured at the top of the receiver. NAVD88 is standard.
 #' @param plotID
 #'
-#' @return numeric elevation, used for correcting raw SET measures to NAVD88 elevaitons.
+#' @return sf object of surveyed plots with Lat/Lon, NAVD88 elevations, date surveyed.
+#' Used for mapping or correcting raw SET measures to NAVD88 elevaitons.
 #' @export
 #'
 #' @examples
@@ -372,7 +385,8 @@ set_get_receiver_elevations <- function(dbconn){
   surveys <- dbconn %>% dplyr::tbl("tbl_Survey_Data") %>%
     dplyr::left_join(tbl(dbconn, "tbl_Locations")) %>%
     dplyr::select(Survey_Date, Plot_Name, starts_with("Pipe"), Vertical_Datum, Plot_Name, "X_Coord", "Y_Coord") %>%
-    dplyr::collect()
+    dplyr::collect() %>%
+    sf::st_as_sf(coords = c("Pipe_X", "Pipe_Y")) %>% sf::`st_crs<-`(6538)
   return(surveys)
 
 }
@@ -385,7 +399,7 @@ set_get_receiver_elevations <- function(dbconn){
 #' @param SETarmHt Distance (height in mm) from the receiver end to the top of the SET arm where pin heights are measured from.
 #' @param receiverHt NAVD88 elevation of the SET receiver in meters
 #'
-#' @return
+#' @return numeric value representing the elevation of the marsh surface at the location of the SET pin measure.
 #' @export
 #'
 #' @examples

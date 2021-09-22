@@ -1,16 +1,16 @@
 # set_check_*
 # Family of functions for QA of SET-MH data.
 # set_check_readers = check SET reader consistency across events.
-# Need to figure out how to address this is cases when readers are inconsistent.
+#   Need to figure out how to address this is cases when readers are inconsistent.
 # set_check_measures = check for large changes in measures
 
 #' set_check_measures
 #'
-#' returns a list of pins that have .
+#' returns a list of pins that have issues indicated or suspicious incremental changes.
 #'
 #' @param dbconn Connection to Database returned from set_get_db
 #'
-#' @return tibble containing SA data in long format
+#' @return tibble containing SET data in long format
 #' @export
 #' @examples
 #' # ADD_EXAMPLES_HERE

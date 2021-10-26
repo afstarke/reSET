@@ -6,7 +6,7 @@
 Opens a Shiny widget that allows for browsing potetial data entry issues
 or exclude outliers.}
 \usage{
-set_check_widget(dataSET)
+set_check_widget(dataSET, val)
 }
 \arguments{
 \item{dataSET}{SET data set as provided by set_get_sets()}

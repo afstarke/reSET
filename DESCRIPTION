@@ -4,7 +4,7 @@ Date: 2018-12-07
 Title: Gather and analyze SET-MH data to assess marsh elevation trends 
 Version: 0.1.0
 Authors@R: person("Adam", "Starke", email = "astarke@tnc.org", role = c("aut", "cre"))
-Maintainer:  Adam Starke <astarke@tnc.org>
+Maintainer: Adam Starke <astarke@tnc.org>
 Description: View, manage, analyze and visualize SET-MH data.
     Specifically for use along side the Marsh Elevation Monitoring Database (v.2.94) developed by the National Park Services
     Inventory and Monitoring .
@@ -21,7 +21,7 @@ Imports:
     odbc,
     sf,
     mapview
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.2
 Suggests: 
     shiny,
     testthat

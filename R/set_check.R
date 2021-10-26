@@ -76,3 +76,25 @@ set_check_notes <- function(dataSET){
     unique() %>% pull()
   notes
 }
+
+#' Check set data for biases in SET reader,
+#' @description Used in conjunction with set_get_doublereads
+#' @param dataSET  Double read data, typically output from set_get_doublereads
+#'
+#' @return
+#' @export
+#'
+#' @examples
+set_check_doublereads <- function(dataSET){
+test %>% dplyr::select(urdid, SET_Reader, Raw, Date, Pin_number, Plot_Name) %>%
+    dplyr::group_by(urdid, Date) %>% dplyr::mutate(reader = letters[1:2]) %>%
+    dplyr::select(-SET_Reader) %>%
+   tidyr::pivot_wider(# id_cols = optional vector of unaffected columns,
+                names_from = c(reader),
+                values_from = c(Raw),
+                names_sep = "_"
+   ) %>% dplyr::mutate(diff = a - b)
+
+}
+
+

@@ -16,7 +16,12 @@ an odbc connection object to a database to be used in piped operations for extra
 Get connected to from Access DB from which
 }
 \details{
-This function connects and returns information relating to the SET-MH database
+This function connects and returns information relating to the SET-MH database.
+Note: There can (will) be compatibility issues with the bit-versions of R and Access.
+The AccessDB that this function was designed around was built on a 32-bit version.
+The R bit-version must match to successfully connect so can be an issue.
+There is a work around available which allows both bit-versions to be installed side-by-side
+more info here: https://knowledge.autodesk.com/support/autocad/learn-explore/caas/sfdcarticles/sfdcarticles/How-to-install-64-bit-Microsoft-Database-Drivers-alongside-32-bit-Microsoft-Office.html
 }
 \keyword{SET,}
 \keyword{SET-MH,}

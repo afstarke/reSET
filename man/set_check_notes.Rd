@@ -10,6 +10,9 @@ set_check_notes(dataSET)
 \arguments{
 \item{dataSET}{SET dataset from get_set_sets()}
 }
+\value{
+
+}
 \description{
 set_check_notes
 Used to check what notes have been made which can indicate pins that may have measurement bias

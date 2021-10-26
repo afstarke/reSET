@@ -11,7 +11,8 @@ set_get_receiver_elevations(dbconn)
 \item{plotID}{}
 }
 \value{
-numeric elevation, used for correcting raw SET measures to NAVD88 elevaitons.
+sf object of surveyed plots with Lat/Lon, NAVD88 elevations, date surveyed.
+Used for mapping or correcting raw SET measures to NAVD88 elevaitons.
 }
 \description{
 set_get_receiver_elevations

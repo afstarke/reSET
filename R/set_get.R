@@ -102,7 +102,8 @@ set_get_stations <- function(dbconn) {
     sapply(strsplit(s, split = " "), cap, USE.NAMES = !is.null(names(s)))
   }
 
-  StudyStations <- StudyStations %>% dplyr::mutate(Stratafication = as.factor(capwords(Stratafication)))
+  StudyStations <- StudyStations %>% dplyr::mutate(Stratafication = as.factor(capwords(Stratafication)),
+                                                   SET_Established_Date = as.Date(SET_Established_Date))
 
 
   # Convert to sf object.
@@ -409,3 +410,26 @@ set_get_absolute_heights <- function(pin_height, pin_numb, pin_table, SETarmHt, 
   return(absHt)
 }
 
+
+#' Check data for double reads.
+#' Investigate if and when a double read of a SET occurs. The result can be used to
+#' make adjustments to data and
+#'
+#' @param dataSET
+#'
+#' @return tibble with data containing double reads.
+#' @export
+#'
+#' @examples
+set_get_doublereads <- function(dataSET){
+  # urdid unique date read ID
+  doubleids <- dataSET %>%
+    mutate(urdid = paste(pin_ID, Date, sep = "_")) %>%
+    group_by(urdid) %>% tally() %>%
+    filter(n > 1) %>% pull(urdid)
+
+  dataSET %>%
+    mutate(urdid = paste(pin_ID, Date, sep = "_")) %>%
+    filter(urdid %in% doubleids)
+
+}

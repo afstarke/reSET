@@ -10,10 +10,10 @@ set_check_measures(dataSET)
 \item{dbconn}{Connection to Database returned from set_get_db}
 }
 \value{
-tibble containing SA data in long format
+tibble containing SET data in long format
 }
 \description{
-returns a list of pins that have .
+returns a list of pins that have issues indicated or suspicious incremental changes.
 }
 \examples{
 # ADD_EXAMPLES_HERE

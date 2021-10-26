@@ -4,19 +4,22 @@
 \alias{set_get_absolute_heights}
 \title{set_get_absolute_heights adjust the measured raw pin height to NAVD88 elevation}
 \usage{
-set_get_absolute_heights(pin_height, pin_numb, pin_table, SETarmHt,
-  receiverHt)
+set_get_absolute_heights(pin_height, pin_numb, pin_table, SETarmHt, receiverHt)
 }
 \arguments{
 \item{pin_height}{numeric raw pin height (in mm) as measured in the field on the SET arm}
 
-\item{pin_numb}{number of pin associated with the measured height}
+\item{pin_numb}{Pin number associated with the measured height recorded (pin_height).
+Pins are uniquely identified to eliminate variation between readings of the SET}
 
 \item{pin_table}{pin height table, created by user}
 
 \item{SETarmHt}{Distance (height in mm) from the receiver end to the top of the SET arm where pin heights are measured from.}
 
 \item{receiverHt}{NAVD88 elevation of the SET receiver in meters}
+}
+\value{
+numeric value representing the elevation of the marsh surface at the location of the SET pin measure.
 }
 \description{
 set_get_absolute_heights adjust the measured raw pin height to NAVD88 elevation

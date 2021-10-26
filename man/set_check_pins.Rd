@@ -4,8 +4,12 @@
 \alias{set_check_pins}
 \title{set_check_pins}
 \usage{
-set_check_pins(dataSET, issues = c("Hole", "hole", "mussel", "Holr",
-  "Shell", "Mussel", "edge of hole", "hole next to mussel"), ...)
+set_check_pins(
+  dataSET,
+  issues = c("Hole", "hole", "mussel", "Holr", "Shell", "Mussel", "edge of hole",
+    "hole next to mussel"),
+  ...
+)
 }
 \arguments{
 \item{dbconn}{Connection to Database returned from set_get_db}

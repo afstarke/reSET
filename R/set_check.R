@@ -1,5 +1,5 @@
 # set_check_*
-# Family of functions for QA of SET-MH data.
+# Family of functions for QA of SET-MH data returns helpful messages on QA concerns.
 # set_check_readers = check SET reader consistency across events.
 #   Need to figure out how to address this is cases when readers are inconsistent.
 # set_check_measures = check for large changes in measures
@@ -86,8 +86,16 @@ set_check_notes <- function(dataSET){
 #'
 #' @examples
 set_check_doublereads <- function(dataSET){
-test %>% dplyr::select(urdid, SET_Reader, Raw, Date, Pin_number, Plot_Name) %>%
-    dplyr::group_by(urdid, Date) %>% dplyr::mutate(reader = letters[1:2]) %>%
+  # find where double reads occur.
+  doubleids <- dataSET %>%
+    mutate(urdid = paste(pin_ID, Date, sep = "_")) %>% # create an id unique to a pin and sample date combination
+    group_by(urdid) %>% tally() %>% # count how many readings a specific pin received on a single date.
+    filter(n > 1) %>% pull(urdid)
+
+  dataSET %>%
+    mutate(urdid = paste(pin_ID, Date, sep = "_")) %>%
+    dplyr::select(urdid, SET_Reader, Raw, Date, Pin_number, Plot_Name, issuePin) %>%
+    dplyr::group_by(urdid, Date) %>% dplyr::mutate(reader = letters[seq_along(urdid)]) %>% # create a coded value for each SET reader for comparisons.
     dplyr::select(-SET_Reader) %>%
    tidyr::pivot_wider(# id_cols = optional vector of unaffected columns,
                 names_from = c(reader),

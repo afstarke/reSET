@@ -285,7 +285,7 @@ set_get_sets <- function(dbconn) {
     dplyr::mutate(Raw = as.numeric(Raw)) %>%
     dplyr::filter(!is.na(Raw))
 
-  pins <- set_check_pins(SET.data.long)
+  pins <- set_check_pins(SET.data.long) # change the approach to give a message saying that there are issues with some pins as ided in set_check_pins
   SET.data.long <- SET.data.long %>%
     dplyr::ungroup() %>%
     dplyr::group_by(pin_ID) %>% # reinforce that the grouping is based on pins
@@ -410,10 +410,10 @@ set_get_absolute_heights <- function(pin_height, pin_numb, pin_table, SETarmHt, 
   return(absHt)
 }
 
-
+# TODO: Redefine the intent behind the set_get_doublereads. Alternative approach would be to just correct all data.
 #' Check data for double reads.
 #' Investigate if and when a double read of a SET occurs. The result can be used to
-#' make adjustments to data and
+#' make adjustments to data and provide some adjustments to the long-term dataset as needed.
 #'
 #' @param dataSET
 #'

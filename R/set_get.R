@@ -42,6 +42,8 @@ set_get_DB <- function(dbPath) {
     warning("DB file does not exist at ", dbPath, "")
   }
   # Create connection strings
+  # TODO: Build this out to be flexible with database. Will need to create some
+  # method to understand the DB and how to translate the wrangling methods
   dbq_string <- paste0("Driver={Microsoft Access Driver (*.mdb, *.accdb)};Dbq=", dbPath)
 
   con <- DBI::dbConnect(drv = odbc::odbc(),

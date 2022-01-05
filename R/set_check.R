@@ -2,7 +2,7 @@
 # Family of functions for QA of SET-MH data returns helpful messages on QA concerns.
 # set_check_readers = check SET reader consistency across events.
 #   Need to figure out how to address this is cases when readers are inconsistent.
-# set_check_measures = check for large changes in measures
+# set_check_measures = check for large changes in measures and flag
 
 #' set_check_measures
 #'
@@ -21,13 +21,15 @@ set_check_measures <- function(dataSET){
   probs <- set_check_pins(dataSET)
 
   SET_data <- dataSET %>%
-    dply::mutate(bigIssuePin = pin_ID %in% probs$pin_ID) %>% # Add in a column indicating if that pin is on the list of issues
-    dply::filter(bigIssuePin == FALSE, Date != '2008-08-08') %>% # Remove initial readings from AH as they were throwing errors and erraneous rates.
-    dply::group_by(pin_ID) %>% # reinforce that the grouping is based on pins
-    dply::arrange(Date) %>%
-    dply::mutate(Change = as.numeric(Raw) - as.numeric(Raw[1]),
+    dplyr::mutate(bigIssuePin = pin_ID %in% probs$pin_ID) %>% # Add in a column indicating if that pin is on the list of issues
+    dplyr::filter(bigIssuePin == FALSE, Date != '2008-08-08') %>% # Remove initial readings from AH as they were throwing errors and erraneous rates.
+    dplyr::group_by(pin_ID) %>% # reinforce that the grouping is based on pins
+    dplyr::arrange(Date) %>%
+    dplyr::mutate(Change = as.numeric(Raw) - as.numeric(Raw[1]),
            incrementalChange = c(NA, diff(Change))) %>%
-    select()
+    dplyr::select(Site_Name, Plot_Name, Arm_Direction, Pin_number, Date, SET_Reader, Raw, IncrementalChange, issuePin, bigIssuePin)
+
+  return(SET_data)
 
 }
 
@@ -37,17 +39,19 @@ set_check_measures <- function(dataSET){
 #' mussel hole, or grass tuft. Allows the filtering of these pins
 #' in analysis downstream in set_clean_pins().
 #'
-#' @param dbconn Connection to Database returned from set_get_db
+#' @param dataSET
+#' @param issues Defaults to some common note flags that have been used, (hole, mussle, mussel hole)
+#' @param ... additional character strings of notes to flag.
 #'
-#' @return tibble containing SA data in long format
+#' @return tibble containing SA data in long format. This tibble must have a "Notes" column to operate proprerly.
 #' @export
 #' @examples
-#' # ADD_EXAMPLES_HERE
+#'
 #'
 set_check_pins <- function(dataSET, issues = c("Hole", "hole", "mussel", "Holr", "Shell", "Mussel", "edge of hole", "hole next to mussel"), ...){
   issues <- c(issues, ...) # add new issue notes if needed.
   troublePins <- dataSET %>% dplyr::ungroup() %>%
-    dplyr::select(Notes, pin_ID) %>%
+    dplyr::select(Notes, pin_ID) %>% # TODO: make this more flexible to allow for other 'comment/note' fields.
     dplyr::filter(complete.cases(.)) %>% # remove all pins that don't have a note.
     `attr<-`("Datainfo", "List of pins that have reported issues (holes, etc)")
 
@@ -61,11 +65,14 @@ set_check_pins <- function(dataSET, issues = c("Hole", "hole", "mussel", "Holr",
 
 
 #' set_check_notes
-#' Used to check what notes have been made which can indicate pins that may have measurement bias
+#' Used to check what notes have been made which can indicate pins that may have measurement bias.
+#' This information can be used to generate a list of flags that can act as a filter for analysis
+#' further in the workflow. This allows the removal of certain data points from the analysis without
+#' removing the datapoint from the dataset. Secondarily these flags can be used in QA/QC workflows
 #'
 #' @param dataSET  SET dataset from get_set_sets()
 #'
-#' @return
+#' @return character vector of unique notes made within data that is p
 #' @export
 #'
 #' @examples
@@ -77,7 +84,7 @@ set_check_notes <- function(dataSET){
   notes
 }
 
-#' Check set data for biases in SET reader,
+#' Check set data for potential biases in SET reader through a
 #' @description Used in conjunction with set_get_doublereads
 #' @param dataSET  Double read data, typically output from set_get_doublereads
 #'
@@ -95,7 +102,11 @@ set_check_doublereads <- function(dataSET){
   dataSET %>%
     mutate(urdid = paste(pin_ID, Date, sep = "_")) %>%
     dplyr::select(urdid, SET_Reader, Raw, Date, Pin_number, Plot_Name, issuePin) %>%
-    dplyr::group_by(urdid, Date) %>% dplyr::mutate(reader = letters[seq_along(urdid)]) %>% # create a coded value for each SET reader for comparisons.
+    dplyr::group_by(urdid, Date) %>%
+    # create a coded value for each SET reader for comparisons by
+    # removing names which can be replicated over time
+    # (i.e. staff stops reading part way and then resumes at a later date.)
+    dplyr::mutate(reader = letters[seq_along(urdid)]) %>%
     dplyr::select(-SET_Reader) %>%
    tidyr::pivot_wider(# id_cols = optional vector of unaffected columns,
                 names_from = c(reader),

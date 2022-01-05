@@ -12,10 +12,12 @@ set_check_pins(
 )
 }
 \arguments{
-\item{dbconn}{Connection to Database returned from set_get_db}
+\item{issues}{Defaults to some common note flags that have been used, (hole, mussle, mussel hole)}
+
+\item{...}{additional character strings of notes to flag.}
 }
 \value{
-tibble containing SA data in long format
+tibble containing SA data in long format. This tibble must have a "Notes" column to operate proprerly.
 }
 \description{
 returns a tibble of measures that had recorded 'issue' i.e.
@@ -23,6 +25,6 @@ mussel hole, or grass tuft. Allows the filtering of these pins
 in analysis downstream in set_clean_pins().
 }
 \examples{
-# ADD_EXAMPLES_HERE
+
 
 }

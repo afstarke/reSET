@@ -3,7 +3,10 @@
 \name{set_check_notes}
 \alias{set_check_notes}
 \title{set_check_notes
-Used to check what notes have been made which can indicate pins that may have measurement bias}
+Used to check what notes have been made which can indicate pins that may have measurement bias.
+This information can be used to generate a list of flags that can act as a filter for analysis
+further in the workflow. This allows the removal of certain data points from the analysis without
+removing the datapoint from the dataset. Secondarily these flags can be used in QA/QC workflows}
 \usage{
 set_check_notes(dataSET)
 }
@@ -11,11 +14,14 @@ set_check_notes(dataSET)
 \item{dataSET}{SET dataset from get_set_sets()}
 }
 \value{
-
+character vector of unique notes made within data that is p
 }
 \description{
 set_check_notes
-Used to check what notes have been made which can indicate pins that may have measurement bias
+Used to check what notes have been made which can indicate pins that may have measurement bias.
+This information can be used to generate a list of flags that can act as a filter for analysis
+further in the workflow. This allows the removal of certain data points from the analysis without
+removing the datapoint from the dataset. Secondarily these flags can be used in QA/QC workflows
 }
 \examples{
 

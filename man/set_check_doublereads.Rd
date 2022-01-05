@@ -2,7 +2,7 @@
 % Please edit documentation in R/set_check.R
 \name{set_check_doublereads}
 \alias{set_check_doublereads}
-\title{Check set data for biases in SET reader,}
+\title{Check set data for potential biases in SET reader through a}
 \usage{
 set_check_doublereads(dataSET)
 }

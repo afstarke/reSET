@@ -71,6 +71,13 @@ complete more of the documentation of what’s currently in this package I
 hope to focus on the data visualization and statistical analysis side of
 the work flow.
 
+## Code of Conduct
+
+Please note that the reSET project is released with a [Contributor Code
+of
+Conduct](https://github.com/afstarke/reSET/blob/master/CODE_OF_CONDUCT.md#contributor-covenant-code-of-conduct).
+By contributing to this project, you agree to abide by its terms.
+
 ### References
 
 James C. Lynch, Phillippe Hensel, and Donald R. Cahoon. “The Surface

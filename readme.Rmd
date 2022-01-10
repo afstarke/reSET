@@ -33,6 +33,12 @@ As mentioned this package is very far from what I envision as complete. You may 
 
 To date, the focus of this package was on simplifying the process of reading SET data into R for use in more typical R workflows. As I complete more of the documentation of what's currently in this package I hope to focus on the data visualization and statistical analysis side of the work flow.
 
+## Code of Conduct
+
+Please note that the reSET project is released with a [Contributor Code of Conduct](https://github.com/afstarke/reSET/blob/master/CODE_OF_CONDUCT.md#contributor-covenant-code-of-conduct). By contributing to this project, you agree to abide by its terms.
+
+
+
 ### References
 
 James C. Lynch, Phillippe Hensel, and Donald R. Cahoon. "The Surface Elevation Table and Marker Horizon Technique: A Protocol for Monitoring Wetland Elevation Dynamics." Report. Natural Resource Report, 2015. USGS Publications Warehouse. <http://pubs.er.usgs.gov/publication/70160049>.

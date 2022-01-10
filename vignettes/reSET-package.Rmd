@@ -1,0 +1,85 @@
+---
+title: "reSET-package"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{reSET-package}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+bibliography: references.bib
+---
+
+```{r eval=FALSE, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(reSET)
+```
+
+## Overview
+
+The structure and naming conventions of the functions within the package was inspired by the many bright minds of contributors of the tidyverse suite of packages. For the leveraging auto complete, all the primary functions begin with `set_` and are split into families of functions based on the general task of the function. Currently there are 2 primary families:
+
+-   `set_get_**` which retrieve data
+-   `set_check_**` interrogates the data to help in QA or other steps
+
+## Usage
+
+### SET_get\_\*\*
+
+`set_get_` functions take either a connection (`dbConn` or path to the DB) or an existing dataframe as returned from a previous `set_get_` query and return something to the user. Most often a dataset that is in the form of a [tidy](https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html) dataframe is returned. In the case of `set_get_stations` a `sf` object (spatial data in the format of a simple feature object) is returned. This is convenient for quick mapping using packages like `mapview` or `tmap`.
+
+The workflow begins with establishing a connection object with a database. In this case the NPS Access DB that is referenced in the 2015 Protocol developed by @jamesc.lynch2015b. By passing the path to the back-end of the Access DB into the function `set_get_DB()`, you can create an object by assigning the output of the function to a variable, in case of the example below called `DBconn`. This object holds the information necessary for R to make the connection to the database. The benefit of this approach is that you can do data entry and management (QA?QC) in Access, which provides a better UI experience, and then pull the data direct into R for further work with just needing to run a few lines of code to update the data.
+
+
+    SET.DB.path <- "D:/Data/SET_data/SET_DB_BE_ver_2.94.mdb" # backend Access database from NPS
+
+    DBconn <- set_get_DB(SET.DB.path) 
+
+    DBconn
+    #> <OdbcConnection> admin@ACCESS
+    #>  Database: D:/Data/SET_data/SET_DB_BE_ver_2.94.mdb
+    #>  ACCESS Version: 04.00.0000
+
+Once you've established the connection using `set_get_DB()` you can use that object in other `set_get_` calls to:
+
+-   Pull SET station locations out as an `sf` object for mapping using `set_get_stations()`
+
+```{=html}
+<!-- -->
+```
+    > marshHts <- set_get_receiver_elevations(dbconn = DBconn)
+    Joining, by = "Location_ID"
+    > marshHts
+    Simple feature collection with 39 features and 6 fields
+    Geometry type: POINT
+    Dimension:     XY
+    Bounding box:  xmin: -73.71823 ymin: 40.59572 xmax: -72.14885 ymax: 41.04341
+    Projected CRS: NAD83(2011) / New York Long Island
+    # A tibble: 39 x 7
+       Survey_Date         Plot_Name Pipe_Z Vertical_Datum X_Coord Y_Coord             geometry
+     * <dttm>              <chr>      <dbl> <chr>            <dbl>   <dbl>          <POINT [m]>
+     1 2018-11-01 00:00:00 BC-1       0.394 NAVD88           -72.3    41.0 (-72.29104 41.04329)
+
+-   Extract SET data in a tidy format using `set_get_sets()`
+
+-   Extract Surface Accretion data in a tidy format using `set_get_accretions()`
+
+-   `set_get_receiver_elevations()` will return an `sf` object with surveyed receiver elevations
+
+-    `set_get_absolute_heights()` returns height-adjusted elevations of the marsh surfave based on the NAVD88 surveyed receiver elevation and the SET equipment used including pin heights (see ?`set_get_pinlengths()` and `?set_pinhts()` utility function.
+
+### SET_check\_\*\*
+
+`set_check_` functions help with some basic QA tasks. The current focus is on flagging and finding pin readings that may have issues that should be investigated. The focus of these functions is to leave the original *raw* data alone in the database and flag it for either filtering within a workflow in R or using it as a sort of check list for performing QA checks on the data within the database. It is important to know that all the functions within `reSET` do not alter the original data in it's source. That is the role of project managers during regular QA work flows.
+
+-   `set_check_measures()` looks for errant data points based on incremental changes and notes made within database.
+
+-   `set_check_pins()` returns a very simple tibble with *Notes* made within the database for a given pin. A unique pin ID is returned for use in additional filtering or queries both within Access or R \[Under development\]
+
+-   `set_check_doublereads()` provides a mechanism to flag SET data that has multiple SET readers through its history. Teamed with `set_get_doublereads()` a user can find and handle those SET reading transitions as seen appropriate. One method in development would be to group the data by each SET reader, calculate the incremental change over time, and then within each unique SET reader perform a rolling sum or aggregation of the change observed for each reading, which in effect removes the 'bias' that may be brought in with a change in SET reader \[more on this approach to come\]
+
+### References

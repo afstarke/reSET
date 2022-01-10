@@ -23,7 +23,10 @@ Imports:
     mapview
 RoxygenNote: 7.1.2
 Suggests: 
+    rmarkdown,
+    knitr,
     shiny,
     testthat
 URL: https://github.com/afstarke/reSET
 BugReports: https://github.com/afstarke/reSET/issues
+VignetteBuilder: knitr

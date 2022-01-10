@@ -27,7 +27,7 @@ set_check_measures <- function(dataSET){
     dplyr::arrange(Date) %>%
     dplyr::mutate(Change = as.numeric(Raw) - as.numeric(Raw[1]),
            incrementalChange = c(NA, diff(Change))) %>%
-    dplyr::select(Site_Name, Plot_Name, Arm_Direction, Pin_number, Date, SET_Reader, Raw, IncrementalChange, issuePin, bigIssuePin)
+    dplyr::select(Site_Name, Plot_Name, Arm_Direction, Pin_number, Date, SET_Reader, Raw, incrementalChange, issuePin, bigIssuePin)
 
   return(SET_data)
 

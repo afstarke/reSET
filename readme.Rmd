@@ -9,15 +9,17 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## reSET
 
-`reSET` , while currently still under active development, intends to help collectors of marsh surface elevation tables and marker horizon (SET-MH) data with bringing their data into R for any number of QA, data visualization, analysis and report creation tasks that the user wishes. This package currently consists of some rather specific functions for interacting with the SET-MH database developed by the National Park Service (Marsh Elevation Monitoring Database v2.75) as referenced in Lynch et al (2015). It is my hope that as new database systems become developed to manage SET-MH data, these functions can be enhanced to allow for more flexible inputs while yielding consistent outputs.
+`reSET` , while currently still under active development, intends to help collectors of marsh surface elevation tables and marker horizon (SET-MH) data with bringing their data into R for any number of QA, data visualization, analysis and report creation tasks that the user wishes. This package currently consists of some rather specific functions for interacting with the SET-MH database developed by the National Park Service (Marsh Elevation Monitoring Database v2.75) as referenced in Lynch et al (2015). It is my hope that as new database systems are developed to manage SET-MH data, functions can be enhanced to allow for more flexible database (or spreadsheets) inputs while yielding consistent outputs which can help create a reproducible workflow.
 
 It is my hope that this somewhat narrowly focused package can be leveraged by other practitioners into something more robust that will promote the sharing of methods, analyses, and results so that we all can benefit from the work of so many using this technique of monitoring to answer some of our big questions relating to marsh resilience. With that as a goal, this code has been licensed under the GPL 3.0 which allows use of the code, provided any resulting products be licensed similarly so that we can all benefit from any development that builds from this or other similar efforts.
 
 ## Installation
 
 Currently this package is only available here on GitHub and can be installed using the `remotes` package.
-`# install.packages("remotes")
-remotes::install_github("afstarke/reSET")`
+
+`# install.packages("remotes")`
+
+`remotes::install_github("afstarke/reSET")`
 
 ### What reSET is NOT?
 
@@ -36,8 +38,6 @@ To date, the focus of this package was on simplifying the process of reading SET
 ## Code of Conduct
 
 Please note that the reSET project is released with a [Contributor Code of Conduct](https://github.com/afstarke/reSET/blob/master/CODE_OF_CONDUCT.md#contributor-covenant-code-of-conduct). By contributing to this project, you agree to abide by its terms.
-
-
 
 ### References
 

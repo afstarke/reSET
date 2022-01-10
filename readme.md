@@ -10,9 +10,10 @@ visualization, analysis and report creation tasks that the user wishes.
 This package currently consists of some rather specific functions for
 interacting with the SET-MH database developed by the National Park
 Service (Marsh Elevation Monitoring Database v2.75) as referenced in
-Lynch et al (2015). It is my hope that as new database systems become
-developed to manage SET-MH data, these functions can be enhanced to
-allow for more flexible inputs while yielding consistent outputs.
+Lynch et al (2015). It is my hope that as new database systems are
+developed to manage SET-MH data, functions can be enhanced to allow for
+more flexible database (or spreadsheets) inputs while yielding
+consistent outputs which can help create a reproducible workflow.
 
 It is my hope that this somewhat narrowly focused package can be
 leveraged by other practitioners into something more robust that will
@@ -28,7 +29,10 @@ other similar efforts.
 
 Currently this package is only available here on GitHub and can be
 installed using the `remotes` package.
-`# install.packages("remotes") remotes::install_github("afstarke/reSET")`
+
+`# install.packages("remotes")`
+
+`remotes::install_github("afstarke/reSET")`
 
 ### What reSET is NOT?
 

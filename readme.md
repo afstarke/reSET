@@ -24,15 +24,12 @@ use of the code, provided any resulting products be licensed similarly
 so that we can all benefit from any development that builds from this or
 other similar efforts.
 
-<<<<<<< HEAD
 ## Installation
 
 Currently this package is only available here on GitHub and can be
 installed using the `remotes` package.
 `# install.packages("remotes") remotes::install_github("afstarke/reSET")`
 
-=======
->>>>>>> 287fedf4a98a93fc7f5f4e61cc5d8bb8ec5d30c7
 ### What reSET is NOT?
 
 This package does not intend to be a *push-button; get-answer* type of
@@ -49,25 +46,15 @@ issues that you may encounter.
 `reSET` is actually a reboot of an effort begun several years ago under
 the SETr name. Between that time and resuming this current effort a very
 well crafted set of tools for the interacting and reporting of SET data
-<<<<<<< HEAD
 was developed by Kim Cressman as part of a [larger national synthesis
 across NERR
 sites](https://nerrssciencecollaborative.org/project/Cressman18), which
 resulted in the creation of the [SETr
 package](https://github.com/swmpkim/SETr). To avoid confusion (and
-competing branding issues when negotiating with corporate sponosors)
+competing branding issues when negotiating with corporate sponsors)
 moving forward this package was renamed to `reSET` but will always seek
 to interact well with the work that has gone into the SETr package. (see
 set_to_setr for example)
-=======
-was developed by [Kim Cressman as part of a larger national synthesis
-across NERR sites, which resulted in the creation of the SETr
-package](https://nerrssciencecollaborative.org/project/Cressman18). To
-avoid confusion (and competing branding issues when negotiating with
-corporate sponosors) moving forward this package was renamed to `reSET`
-but will always seek to interact well with the work that has gone into
-the SETr package. (see set_to_setr for example)
->>>>>>> 287fedf4a98a93fc7f5f4e61cc5d8bb8ec5d30c7
 
 ## Future Development
 
@@ -84,11 +71,8 @@ complete more of the documentation of what’s currently in this package I
 hope to focus on the data visualization and statistical analysis side of
 the work flow.
 
-<<<<<<< HEAD
 ### References
 
-=======
->>>>>>> 287fedf4a98a93fc7f5f4e61cc5d8bb8ec5d30c7
 James C. Lynch, Phillippe Hensel, and Donald R. Cahoon. “The Surface
 Elevation Table and Marker Horizon Technique: A Protocol for Monitoring
 Wetland Elevation Dynamics.” Report. Natural Resource Report, 2015. USGS

@@ -25,7 +25,7 @@ This package does not intend to be a *push-button; get-answer* type of tool. It 
 
 ## What's with the name?
 
-`reSET` is actually a reboot of an effort begun several years ago under the SETr name. Between that time and resuming this current effort a very well crafted set of tools for the interacting and reporting of SET data was developed by Kim Cressman as part of a [larger national synthesis across NERR sites](https://nerrssciencecollaborative.org/project/Cressman18), which resulted in the creation of the [SETr package](https://github.com/swmpkim/SETr). To avoid confusion (and competing branding issues when negotiating with corporate sponosors) moving forward this package was renamed to `reSET` but will always seek to interact well with the work that has gone into the SETr package. (see set_to_setr for example)
+`reSET` is actually a reboot of an effort begun several years ago under the SETr name. Between that time and resuming this current effort a very well crafted set of tools for the interacting and reporting of SET data was developed by Kim Cressman as part of a [larger national synthesis across NERR sites](https://nerrssciencecollaborative.org/project/Cressman18), which resulted in the creation of the [SETr package](https://github.com/swmpkim/SETr). To avoid confusion (and competing branding issues when negotiating with corporate sponsors) moving forward this package was renamed to `reSET` but will always seek to interact well with the work that has gone into the SETr package. (see set_to_setr for example)
 
 ## Future Development
 

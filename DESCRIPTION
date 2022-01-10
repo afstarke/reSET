@@ -8,7 +8,7 @@ Maintainer: Adam Starke <astarke@tnc.org>
 Description: View, manage, analyze and visualize SET-MH data.
     Specifically for use along side the Marsh Elevation Monitoring Database (v.2.94) developed by the National Park Services
     Inventory and Monitoring .
-License: GPL-3 + file LICENSE
+License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
 Imports:

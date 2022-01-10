@@ -59,3 +59,5 @@ set_check_widget <- function(dataSET, val) {
   shiny::runGadget(ui, server, viewer = shiny::browserViewer())
 
 }
+
+

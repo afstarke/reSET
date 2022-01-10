@@ -371,7 +371,8 @@ set_get_pinlengths <- function(pin_numb, pin_table){
 
 
 #' set_get_receiver_elevations
-#' Retreive deep SET-rod receiver height as measured at the top of the receiver. NAVD88 is standard.
+#'
+#' @description  Retreive deep SET-rod receiver height as measured at the top of the receiver. NAVD88 is standard.
 #' @param plotID
 #'
 #' @return sf object of surveyed plots with Lat/Lon, NAVD88 elevations, date surveyed.

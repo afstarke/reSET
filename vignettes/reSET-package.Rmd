@@ -34,7 +34,6 @@ The structure and naming conventions of the functions within the package was ins
 
 The workflow begins with establishing a connection object with a database. In this case the NPS Access DB that is referenced in the 2015 Protocol developed by @jamesc.lynch2015b. By passing the path to the back-end of the Access DB into the function `set_get_DB()`, you can create an object by assigning the output of the function to a variable, in case of the example below called `DBconn`. This object holds the information necessary for R to make the connection to the database. The benefit of this approach is that you can do data entry and management (QA?QC) in Access, which provides a better UI experience, and then pull the data direct into R for further work with just needing to run a few lines of code to update the data.
 
-
     SET.DB.path <- "D:/Data/SET_data/SET_DB_BE_ver_2.94.mdb" # backend Access database from NPS
 
     DBconn <- set_get_DB(SET.DB.path) 
@@ -48,9 +47,8 @@ Once you've established the connection using `set_get_DB()` you can use that obj
 
 -   Pull SET station locations out as an `sf` object for mapping using `set_get_stations()`
 
-```{=html}
 <!-- -->
-```
+
     > marshHts <- set_get_receiver_elevations(dbconn = DBconn)
     Joining, by = "Location_ID"
     > marshHts
@@ -70,7 +68,7 @@ Once you've established the connection using `set_get_DB()` you can use that obj
 
 -   `set_get_receiver_elevations()` will return an `sf` object with surveyed receiver elevations
 
--    `set_get_absolute_heights()` returns height-adjusted elevations of the marsh surfave based on the NAVD88 surveyed receiver elevation and the SET equipment used including pin heights (see ?`set_get_pinlengths()` and `?set_pinhts()` utility function.
+-   `set_get_absolute_heights()` returns height-adjusted elevations of the marsh surfave based on the NAVD88 surveyed receiver elevation and the SET equipment used including pin heights (see ?`set_get_pinlengths()` and `?set_pinhts()` utility function.
 
 ### SET_check\_\*\*
 

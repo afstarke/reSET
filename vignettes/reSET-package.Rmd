@@ -1,0 +1,49 @@
+---
+title: "reSET-package"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{reSET-package}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+bibliography: references.bib
+---
+
+```{r eval=FALSE, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(reSET)
+```
+
+## Overview
+
+The structure and naming conventions of the functions within the package was inspired by the many bright minds of contributors of the tidyverse suite of packages. For the leveraging auto complete, all the primary functions begin with `set_` and are split into families of functions based on the general task of the function. Currently there are 2 primary families:
+
+-   `set_get_**` which retrieve data
+-   `set_check_**` interrogates the data to help in QA or other steps
+
+## Usage
+
+### SET_get\_\*\*
+
+`set_get_` functions take either a connection (`dbConn` or path to the DB) or an existing dataframe as returned from a previous `set_get_` query and return something to the user. Most often a dataset that is in the form of a [tidy](https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html) dataframe is returned. In the case of `set_get_stations` a `sf` object (spatial data in the format of a simple feature object) is returned. This is convenient for quick mapping using packages like `mapview` or `tmap`.
+
+The workflow begins with establishing a connection object with a database. In this case the NPS Access DB that is referenced in the 2015 Protocol developed by @jamesc.lynch2015b. By passing the path to the back-end of the Access DB into the function `set_get_DB()`, you can create an object by assigning the output of the function to a variable, in case of the example below called `DBconn`. This object holds the information necessary for R to make the connection to the database. The benefit of this approach is that you can do data entry and management (QA?QC) in Access, which provides a better UI experience, and then pull the data direct into R for further work with just needing to run a few lines of code to update the data.
+
+
+    SET.DB.path <- "D:/Data/SET_data/SET_DB_BE_ver_2.94.mdb" # backend Access database from NPS
+
+    DBconn <- set_get_DB(SET.DB.path) 
+
+    DBconn
+    #> <OdbcConnection> admin@ACCESS
+    #>  Database: D:/Data/SET_data/SET_DB_BE_ver_2.94.mdb
+    #>  ACCESS Version: 04.00.0000
+
+Once you've established the connection using `set_get_DB()` you will want to
+
+### References

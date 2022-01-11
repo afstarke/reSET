@@ -232,7 +232,7 @@ set_get_sets <- function(dbconn) {
   # Join the measured SET pin data to the positions to convert Position_ID to a arm direction
   SET <- dplyr::left_join(SET_data, SET_positions, by = "Position_ID") %>% dplyr::collect()
   # TODO: finish the munging steps in here to output the long format SET data with associated reader info.
-  SET.data <- dplyr::inner_join(SET, SET_samplings, by="Event_ID") #%>% dplyr::collect()
+  SET.data <- dplyr::inner_join(SET, SET_samplings, by="Event_ID")
   # Munge
   # BUG: There's a set of duplicated values being introduced in here somewhere. Presumably by an indirect join with the Survey table
   SET.data1 <- SET.data %>%
@@ -294,6 +294,7 @@ set_get_sets <- function(dbconn) {
     dplyr::arrange(Date) %>%
     dplyr::mutate(Change = as.numeric(Raw) - as.numeric(Raw[1])) %>%
     dplyr::mutate(incrementalChange = c(NA, diff(Change))) %>%
+    dplyr::mutate(incrementalTime = DecYear - dplyr::lag(DecYear, n = 1)) %>%
     dplyr::mutate(issuePin = pin_ID %in% pins$pin_ID)
 
   attr(SET.data.long, 'Datainfo') <-"Full SET dataset including all measures in a LONG format" # give dataframe some metadata attributes

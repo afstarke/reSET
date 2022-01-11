@@ -84,11 +84,13 @@ get_pinhts <- function(){
 #'
 #' @param dataSET tibble of SET data from reSET::set_get_sets
 #'
-#' @return renamed tibble for use in SETr packages calc_change_cumu and calc_change_incr functions.
+#' @return renamed tibble for use in SETr packages
+#' calc_change_cumu and calc_change_incr functions.
 #' @export
 #'
 #' @examples
-#' set_to_setr(SET_data) %>% SETr::calc_change_incr() # returns list of dataframes of incremental change rates.
+#' set_to_setr(SET_data) %>% SETr::calc_change_incr() # returns
+#' list of dataframes of incremental change rates.
 set_to_setr <- function(dataSET){
 
   dat <- dataSET %>% dplyr::mutate(pin_ht_cm = Raw * 100) %>%

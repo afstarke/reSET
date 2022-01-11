@@ -10,11 +10,13 @@ set_to_setr(dataSET)
 \item{dataSET}{tibble of SET data from reSET::set_get_sets}
 }
 \value{
-renamed tibble for use in SETr packages calc_change_cumu and calc_change_incr functions.
+renamed tibble for use in SETr packages
+calc_change_cumu and calc_change_incr functions.
 }
 \description{
 set data to SETr data.
 }
 \examples{
-set_to_setr(SET_data) \%>\% SETr::calc_change_incr() # returns list of dataframes of incremental change rates.
+set_to_setr(SET_data) \%>\% SETr::calc_change_incr() # returns
+list of dataframes of incremental change rates.
 }

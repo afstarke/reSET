@@ -43,7 +43,7 @@ statistical analysis etc. It is merely a tool to help in that process.
 View this as a disclaimer that there can be, and likely are, bugs in
 these functions that may result in error messages or erroneous results
 that users of this package should be on the look out for. Please file
-issues that you may encounter.
+issues that you may encounter or contact me to help improve this work.
 
 ## What’s with the name?
 
@@ -58,7 +58,8 @@ package](https://github.com/swmpkim/SETr). To avoid confusion (and
 competing branding issues when negotiating with corporate sponsors)
 moving forward this package was renamed to `reSET` but will always seek
 to interact well with the work that has gone into the SETr package. (see
-set_to_setr for example)
+set_to_setr for example). I hope that the SET-MH community can both
+benefit and build from these two efforts.
 
 ## Future Development
 

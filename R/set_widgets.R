@@ -10,17 +10,18 @@
 #'
 #' @examples
 #'
-set_check_widget <- function(dataSET, val) {
+set_check_widget <- function(dataSET) {
 
-
+# UI ----
   ui <- miniUI::miniPage(
     miniUI::gadgetTitleBar("SET measures QA widget",
                    left =  miniUI::miniTitleBarCancelButton(),
                    right =  miniUI::miniTitleBarButton(inputId = "done", label = "Done", primary = TRUE)),
     miniUI::miniContentPanel(
-      shiny::selectInput(inputId = "SETstation", choices = unique(dataSET$Plot_Name), label = "Select SET Study Site"),
-      shiny::selectInput(inputId = "Direction", choices = unique(dataSET$Arm_Direction), label = "Choose arm direction:"),
-      shiny::plotOutput("plot1", brush = "plot_brush"),
+      shiny::selectInput(inputId = "SETstation",
+                         choices = unique(dataSET$Plot_Name), label = "Select SET Study Site Station"),
+      shiny::actionButton(inputId = "reset", "Undo selections"),
+      shiny::plotOutput("plot1", click = "plot_click"),
       shiny::dataTableOutput(outputId = "dtable")
 
     )
@@ -28,35 +29,49 @@ set_check_widget <- function(dataSET, val) {
 # TODO: Clean up to make plots easier to read.
 # TODO: Incorporate updateSelect to provide direction choices based on station selected.
   server <- function(input, output, session) {
-    data <- reactive({dataSET %>%
-      filter(Plot_Name == input$SETstation, Arm_Direction == input$Direction) %>%
-      select(Site_Name, SET_Type, Plot_Name, Arm_Direction, Pin_number, issuePin, Date, Raw, Notes, SET_Reader, incrementalChange)})
+
+    vals <- shiny::reactive(
+     data = dataSET %>%
+      filter(Plot_Name == input$SETstation) %>%
+      select(Site_Name, SET_Type, Plot_Name, Arm_Direction, Pin_number, issuePin, Date, Raw, Notes, SET_Reader, incrementalChange))
+
+    vals$keeprows  <-  rep(TRUE, nrow(vals$data))
 
     # Define reactive expressions, outputs, etc.
     output$plot1 <- renderPlot({
+      includes <- data()[vals$keeprows, , drop = FALSE]
+      excludes <- data()[!vals$keeprows, , drop = FALSE]
 
-      data() %>%
-      ggplot(aes(x = Date, y = incrementalChange, group = pin_ID, label = Pin_number)) +
-        geom_point(aes(color = issuePin)) + geom_text() +
+      includes() %>%
+      ggplot(aes(x = Date, y = incrementalChange, group = pin_ID)) +
+        geom_point(aes(color = issuePin)) +
         geom_line() +
+        geom_smooth(method = "lm") +
+        geom_point(data = excludes, shape = 21, fill = NA, alpha = .7) +
         scale_color_viridis_d() +
         facet_grid(rows = vars(Pin_number), cols = vars(Arm_Direction)) +
         theme_minimal()
     })
     output$dtable <- renderDataTable({
-      shiny::brushedPoints(df = data() %>% select(-pin_ID),
-                    brush = input$plot_brush, allRows = F, xvar = "Date", yvar = "incrementalChange")
+      shiny::nearPoints(df = includes %>% select(-pin_ID),
+                        coordinfo = input$plot_click, allRows = F, xvar = "Date", yvar = "incrementalChange")
     })
 
+
+    shiny::observeEvent(input$plot_click, {
+      res <- nearPoints(data(), input$plot_click, allRows = TRUE)
+      vals$keeprows <- xor(vals$keeprows, res$selected_)
+    })
+    shiny::observeEvent(input$reset, {vals$keeprows <- rep(TRUE, nrow())})
         # When the Done button is clicked, return a value
-    observeEvent(input$done, {
-      selectedPts <- shiny::brushedPoints(data(), brush = input$plot_brush)
+    shiny::observeEvent(input$done, {
+      selectedPts <- includes
       shiny::stopApp(selectedPts)
     })
 }
 
 
-  shiny::runGadget(ui, server, viewer = shiny::browserViewer())
+  shiny::runGadget(ui, server, viewer = shiny::dialogViewer(dialogName = "SET Explorer", width = 800, height = 800))
 
 }
 

@@ -6,7 +6,8 @@
 
 #' set_check_measures
 #'
-#' returns a list of pins that have issues indicated or suspicious incremental changes.
+#' returns a list of pins that have issues indicated or suspicious incremental changes. Enhanced
+#' further with set_check_change function.
 #'
 #' @param dbconn Connection to Database returned from set_get_db
 #'
@@ -35,8 +36,8 @@ set_check_measures <- function(dataSET){
 
 #' set_check_pins
 #'
-#' returns a tibble of measures that had recorded 'issue' i.e.
-#' mussel hole, or grass tuft. Allows the filtering of these pins
+#' returns a tibble of measures that had recorded a note consisting of an
+#' 'issue' i.e. mussel hole, or grass tuft. Allows the filtering of these pins
 #' in analysis downstream in set_clean_pins().
 #'
 #' @param dataSET
@@ -240,13 +241,16 @@ set_check_recorded_vals <- function(dbconn) {
 #' Leverages lubridates capability to parse durations so values like "1 week" and "10 months" are accpetable.
 #' @param mm_change Change in pin height over the duration provided that will lead to a flag in the record in mm.
 #' @param dataSET SET data as returned by set_get_sets.
+#' @param drop_rows TRUE, drops rows that don't meet the flag criteria. To return the full dataset, with
+#' an appended column of flag set to FALSE.
 #'
 #' @return tibble of SET data that's been trimmed down to show only measures that were made that fell above the
 #' the treshold identified in the function call.
 #' @export
 #'
 #' @examples set_check_change(duration = "3 months", mm_change = 5) # > 5 mm change over 3 months will
-set_check_change <- function(dataSET, duration = "1 year", mm_change = 20){
+set_check_change <- function(dataSET, duration = "1 year", mm_change = 20, drop_rows = TRUE){
+
   dec_year <-  lubridate::duration(duration)/lubridate::dyears(1)
   threshold <- mm_change / dec_year
 
@@ -259,9 +263,13 @@ set_check_change <- function(dataSET, duration = "1 year", mm_change = 20){
         chng_thresh > threshold ~ TRUE,
         TRUE ~ FALSE
       )
-    ) %>%
-    dplyr::filter(flag_change) %>%
-    select(Site_Name:Arm_Direction, Date:issuePin, flag_change)
+    ) %>% select(Site_Name:Arm_Direction, Date:issuePin, flag_change)
+
+  if(drop_rows) {
+    SET_data <- SET_data %>% filter(flag_change)}
+  else{
+    SET_data <- SET_data
+  }
 
 
   attr(SET_data, 'Datainfo') <-"Tibble of non-numeric recorded values" # give dataframe some metadata attributes

@@ -13,7 +13,8 @@ set_check_measures(dataSET)
 tibble containing SET data in long format
 }
 \description{
-returns a list of pins that have issues indicated or suspicious incremental changes.
+returns a list of pins that have issues indicated or suspicious incremental changes. Enhanced
+further with set_check_change function.
 }
 \examples{
 # ADD_EXAMPLES_HERE

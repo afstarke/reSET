@@ -8,7 +8,12 @@ Used for flagging and catching potential errors. Replaces the more simple increm
 approach with one that allows for larger gaps in the data. Perhaps also catches more potential
 issues for readings that occurred more closely together.}
 \usage{
-set_check_change(dataSET, duration = "1 year", mm_change = 20)
+set_check_change(
+  dataSET,
+  duration = "1 year",
+  mm_change = 20,
+  drop_rows = TRUE
+)
 }
 \arguments{
 \item{dataSET}{SET data as returned by set_get_sets.}
@@ -17,6 +22,9 @@ set_check_change(dataSET, duration = "1 year", mm_change = 20)
 Leverages lubridates capability to parse durations so values like "1 week" and "10 months" are accpetable.}
 
 \item{mm_change}{Change in pin height over the duration provided that will lead to a flag in the record in mm.}
+
+\item{drop_rows}{TRUE, drops rows that don't meet the flag criteria. To return the full dataset, with
+an appended column of flag set to FALSE.}
 }
 \value{
 tibble of SET data that's been trimmed down to show only measures that were made that fell above the

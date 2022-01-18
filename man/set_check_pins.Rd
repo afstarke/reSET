@@ -20,8 +20,8 @@ set_check_pins(
 tibble containing SA data in long format. This tibble must have a "Notes" column to operate proprerly.
 }
 \description{
-returns a tibble of measures that had recorded 'issue' i.e.
-mussel hole, or grass tuft. Allows the filtering of these pins
+returns a tibble of measures that had recorded a note consisting of an
+'issue' i.e. mussel hole, or grass tuft. Allows the filtering of these pins
 in analysis downstream in set_clean_pins().
 }
 \examples{

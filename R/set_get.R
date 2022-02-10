@@ -49,6 +49,7 @@ set_get_DB <- function(dbPath) {
   con <- DBI::dbConnect(drv = odbc::odbc(),
     .connection_string = dbq_string
   )
+  attr(con, which = "File last updated") <- file.info(dbPath)$ctime
   return(con)
 }
 
@@ -111,6 +112,7 @@ set_get_stations <- function(dbconn) {
   # Convert to sf object.
   StudyStations <- StudyStations %>% sf::st_as_sf(coords = c("X_Coord", "Y_Coord"), crs = 4326) # make sf
 
+  attr(StudyStations, which = "File last updated") <- attr(dbconn, which = "File last updated")
 
   return(StudyStations)
 }

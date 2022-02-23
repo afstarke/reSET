@@ -6,9 +6,9 @@
 # DONE: set_get_stations return sf object with meta data on
 # the station including elevation?
 # set_get_readers returns basic dataframe of SET readers
-# set_get_samplingevents
-# set_get_sets
-# set_get_accretions
+# DONE: set_get_samplingevents
+# DONE: set_get_sets
+# DONE: set_get_accretions
 # set_get_pinlengths
 # set_get_receiver_elevations
 # set_get_absolute_heights
@@ -49,7 +49,7 @@ set_get_DB <- function(dbPath) {
   con <- DBI::dbConnect(drv = odbc::odbc(),
     .connection_string = dbq_string
   )
-  attr(con, which = "File last updated") <- file.info(dbPath)$ctime
+  attr(con, which = "File last updated") <- file.info(dbPath)$mtime
   return(con)
 }
 
@@ -151,6 +151,7 @@ set_get_readers <- function(dbconn) {
     dplyr::group_by(Last_Name, First_Name, Organization, SET_Reader, Contact_ID) %>%
     dplyr::tally() %>% dplyr::arrange(desc(n)) %>% dplyr::rename(`SET measures` = n)
 
+  attr(SET_readers, which = "File last updated") <- attr(dbconn, which = "File last updated")
   return(SET_readers)
 }
 
@@ -192,6 +193,8 @@ set_get_samplingevents <- function(dbconn){
   StudyStations <- set_get_stations(dbconn)
   Samplings <- dplyr::inner_join(StudyStations, Events, by= "Location_ID")
   Samplings2 <- dplyr::inner_join(Samplings, SET_readers, by = "Event_ID")
+
+  attr(Samplings2, which = "File last updated") <- attr(dbconn, which = "File last updated")
 
   return(Samplings2)
 }
@@ -301,6 +304,7 @@ set_get_sets <- function(dbconn) {
 
   attr(SET.data.long, 'Datainfo') <-"Full SET dataset including all measures in a LONG format" # give dataframe some metadata attributes
   attr(SET.data.long, 'Date of data retreival') <- format(lubridate::today(), '%b %d %Y')
+  attr(SET.data.long, which = "File last updated") <- attr(dbconn, which = "File last updated")
 
 
   return(SET.data.long)
@@ -345,6 +349,7 @@ set_get_accretions <- function(dbconn){
     dplyr::rename(Date = Start_Date)
 
   attr(SA.data.long, 'Date of data retreival') <- format(lubridate::today(), '%b %d %Y')
+  attr(SA.data.long, which = "File last updated") <- attr(dbconn, which = "File last updated")
 
   return(SA.data.long)
 
@@ -394,6 +399,9 @@ set_get_receiver_elevations <- function(dbconn){
     dplyr::select(Survey_Date, Plot_Name, starts_with("Pipe"), Vertical_Datum, Plot_Name, "X_Coord", "Y_Coord") %>%
     dplyr::collect() %>%
     sf::st_as_sf(coords = c("Pipe_X", "Pipe_Y")) %>% sf::`st_crs<-`(6538)
+
+  attr(surveys, which = "File last updated") <- attr(dbconn, which = "File last updated")
+
   return(surveys)
 
 }

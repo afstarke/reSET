@@ -1,7 +1,7 @@
 
 
 #' set_check_widget
-#' Opens a Shiny widget that allows for browsing potetial data entry issues
+#' Opens a Shiny widget that allows for browsing potential data entry issues
 #' or exclude outliers.
 #' @param dataSET SET data set as provided by set_get_sets()
 #'
@@ -30,10 +30,27 @@ set_check_widget <- function(dataSET) {
 # TODO: Incorporate updateSelect to provide direction choices based on station selected.
   server <- function(input, output, session) {
 
+
+
     vals <- shiny::reactive(
-     data = dataSET %>%
-      filter(Plot_Name == input$SETstation) %>%
-      select(Site_Name, SET_Type, Plot_Name, Arm_Direction, Pin_number, issuePin, Date, Raw, Notes, SET_Reader, incrementalChange))
+      dataSET %>%
+        filter(Plot_Name == input$SETstation) %>%
+        select(
+          Site_Name,
+          SET_Type,
+          Plot_Name,
+          Arm_Direction,
+          Pin_number,
+          issuePin,
+          Date,
+          Raw,
+          Notes,
+          SET_Reader,
+      incrementalChange
+    ))
+
+
+
 
     vals$keeprows  <-  rep(TRUE, nrow(vals$data))
 

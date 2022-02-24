@@ -2,20 +2,24 @@
 % Please edit documentation in R/set_get.R
 \name{set_get_doublereads}
 \alias{set_get_doublereads}
-\title{Check data for double reads.
-Investigate if and when a double read of a SET occurs. The result can be used to
-make adjustments to data and provide some adjustments to the long-term dataset as needed.}
+\title{TODO: Redefine the intent behind the set_get_doublereads. Alternative
+approach would be to just correct all data. ' Check data for double reads. '
+Investigate if and when a double read of a SET occurs. The result can be used
+to ' make adjustments to data and provide some adjustments to the long-term
+dataset as needed.}
 \usage{
 set_get_doublereads(dataSET)
-}
-\arguments{
-\item{dataSET}{}
 }
 \value{
 tibble with data containing double reads.
 }
 \description{
-Check data for double reads.
-Investigate if and when a double read of a SET occurs. The result can be used to
-make adjustments to data and provide some adjustments to the long-term dataset as needed.
+TODO: Redefine the intent behind the set_get_doublereads. Alternative
+approach would be to just correct all data. ' Check data for double reads. '
+Investigate if and when a double read of a SET occurs. The result can be used
+to ' make adjustments to data and provide some adjustments to the long-term
+dataset as needed.
+}
+\examples{
+
 }

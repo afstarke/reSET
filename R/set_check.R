@@ -59,7 +59,6 @@ set_check_pins <- function(dataSET, issues = c("Hole", "hole", "mussel", "Holr",
   pinlistClean <- unique(troublePins$pin_ID)
 
   issuePins <- troublePins %>% filter(Notes %in% issues)
-  # TODO: decide on returning a vector? or a tibble?
   issuePins
 
 }
@@ -85,22 +84,19 @@ set_check_notes <- function(dataSET){
   notes
 }
 
-#' Check set data for potential biases in SET reader through a
+#' Check set data for potential biases in SET reader through a graphical and
+#' optional tabular format
 #' @description Used in conjunction with set_get_doublereads
-#' @param dataSET  Double read data, typically output from set_get_doublereads
+#' @param dataSET  SET data as returned from set_get_sets
 #'
 #' @return
 #' @export
 #'
 #' @examples
 set_check_doublereads <- function(dataSET){
-  # find where double reads occur.
-  doubleids <- dataSET %>%
-    mutate(urdid = paste(pin_ID, Date, sep = "_")) %>% # create an id unique to a pin and sample date combination
-    group_by(urdid) %>% tally() %>% # count how many readings a specific pin received on a single date.
-    filter(n > 1) %>% pull(urdid)
+  dat <- set_get_doublereads(dataSET)
 
-  dataSET %>%
+  dat <- dat %>%
     mutate(urdid = paste(pin_ID, Date, sep = "_")) %>%
     dplyr::select(urdid, SET_Reader, Raw, Date, Pin_number, Plot_Name, issuePin) %>%
     dplyr::group_by(urdid, Date) %>%
@@ -114,6 +110,18 @@ set_check_doublereads <- function(dataSET){
                 values_from = c(Raw),
                 names_sep = "_"
    ) %>% dplyr::mutate(diff = a - b)
+
+  plotly::ggplotly({
+    dat %>% ggplot(aes(Plot_Name, diff, color = abs(diff), label = Date)) +
+      geom_violin(alpha = .5) +
+      geom_jitter(size = 2) +
+      # facet_wrap( ~ Plot_Name) +
+      scale_color_viridis_c() +
+      theme_minimal() +
+      labs(title = "Double Read SET measures",
+           caption = "QA check for potential errors or misreads.",
+          color = "Difference in readings")
+  })
 
 }
 
@@ -156,7 +164,7 @@ set_check_recorded_vals <- function(dbconn) {
   # SET Rod data
   # Join the measured SET pin data to the positions to convert Position_ID to a arm direction
   SET <- dplyr::left_join(SET_data, SET_positions, by = "Position_ID") %>% dplyr::collect()
-  # TODO: finish the munging steps in here to output the long format SET data with associated reader info.
+
   SET.data <- dplyr::inner_join(SET, SET_samplings, by="Event_ID")
   # Munge
   # BUG: There's a set of duplicated values being introduced in here somewhere. Presumably by an indirect join with the Survey table

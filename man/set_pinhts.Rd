@@ -10,20 +10,20 @@ set_pinhts(n_pins = 9)
 \item{n_pins}{}
 }
 \value{
-a named vector as well as a .rds object written to your current working directory
+a named vector as well as a .rds object written to your current
+  working directory
 }
 \description{
-Thie utility function creates a named vector representing the
-pin length named by the pin number. This table/vector is used in the set_get_pinlengths
-and set_get_absolute_heights functions which adjust the measured pin height taken from the SET arm
-to the NAVD88 datum.
-This utility is meant to be a helper function and would only need to be run once.
-Users can also create a named vector directly using any number of approaches in R.
-One approach would be:
- pinHts <- c(176, 176, 176, 175, 177, 176, 176, 176, 175); names(pinHts) <- 1:9
+This utility function creates a named vector representing the
+  pin length with a name as the pin number. This table/vector is used in the
 }
 \examples{
 pinHts <- set_pinhts()
 pinHts_18 <- set_pinhts(n_pins = 18)
+
+}
+\seealso{
+
+
 
 }

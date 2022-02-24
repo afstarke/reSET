@@ -3,7 +3,7 @@
 \name{set_check_widget}
 \alias{set_check_widget}
 \title{set_check_widget
-Opens a Shiny widget that allows for browsing potetial data entry issues
+Opens a Shiny widget that allows for browsing potential data entry issues
 or exclude outliers.}
 \usage{
 set_check_widget(dataSET)
@@ -16,7 +16,7 @@ dataframe of selected points.
 }
 \description{
 set_check_widget
-Opens a Shiny widget that allows for browsing potetial data entry issues
+Opens a Shiny widget that allows for browsing potential data entry issues
 or exclude outliers.
 }
 \examples{

@@ -2,12 +2,13 @@
 % Please edit documentation in R/set_check.R
 \name{set_check_doublereads}
 \alias{set_check_doublereads}
-\title{Check set data for potential biases in SET reader through a}
+\title{Check set data for potential biases in SET reader through a graphical and
+optional tabular format}
 \usage{
 set_check_doublereads(dataSET)
 }
 \arguments{
-\item{dataSET}{Double read data, typically output from set_get_doublereads}
+\item{dataSET}{SET data as returned from set_get_sets}
 }
 \value{
 

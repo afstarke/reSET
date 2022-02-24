@@ -10,11 +10,13 @@ set_get_receiver_elevations(dbconn)
 \item{plotID}{}
 }
 \value{
-sf object of surveyed plots with Lat/Lon, NAVD88 elevations, date surveyed.
-Used for mapping or correcting raw SET measures to NAVD88 elevaitons.
+sf object of surveyed plots with Lat/Lon, NAVD88 elevations, date
+  surveyed. Used for mapping or correcting raw SET measures to NAVD88
+  elevations.
 }
 \description{
-Retreive deep SET-rod receiver height as measured at the top of the receiver. NAVD88 is standard.
+Retrieve deep SET-rod receiver heights as measured at the top of
+  the receiver. NAVD88.
 }
 \examples{
 

@@ -17,20 +17,24 @@
 #' mtcars %>% ggvis(~mpg, ~wt) %>% layer_points()
 NULL
 
+
 # Utility to create pin height vector
 #' Create pin height table (named vector) using prompts.
 #'
-#' @description Thie utility function creates a named vector representing the
-#' pin length named by the pin number. This table/vector is used in the set_get_pinlengths
-#' and set_get_absolute_heights functions which adjust the measured pin height taken from the SET arm
-#' to the NAVD88 datum.
-#' This utility is meant to be a helper function and would only need to be run once.
-#' Users can also create a named vector directly using any number of approaches in R.
-#' One approach would be:
-#'  pinHts <- c(176, 176, 176, 175, 177, 176, 176, 176, 175); names(pinHts) <- 1:9
+#' @description This utility function creates a named vector representing the
+#'   pin length with a name as the pin number. This table/vector is used in the
+#' @seealso {\code{\link{set_get_pinlengths}} and
+#' @seealso {\code{\link{set_get_absolute_heights}} functions which adjust the
+#'   measured pin height taken from the SET arm to the NAVD88 datum. This
+#'   utility is meant to be a helper function and would only need to be run once
+#'   for creating the named vector and storing it within the project folder
+#'   (e.g. /data). Users can also create a named vector directly using any
+#'   number of approaches in R. One approach would be: pinHts <- c(176, 176,
+#'   176, 175, 177, 176, 176, 176, 175); names(pinHts) <- 1:9
 #' @param n_pins
 #'
-#' @return a named vector as well as a .rds object written to your current working directory
+#' @return a named vector as well as a .rds object written to your current
+#'   working directory
 #' @export
 #'
 #' @examples
@@ -62,8 +66,9 @@ set_pinhts <- function(n_pins = 9){
     vec[i] <- pin
     names(vec)[i] <-  names(pin)
   }
-  return(vec)
+
   readr::write_rds(x = vec, file = "pin_height_list.rds")
+  return(vec)
 }
 
 
@@ -74,8 +79,11 @@ set_pinhts <- function(n_pins = 9){
 #'
 #' @examples
 #' pinhts <- get_pinhts()
+
 get_pinhts <- function(){
   pin_heights <- readr::read_rds("pin_height_list.rds")
+  stopifnot(is.vector(pin_heights), is.character(names(pin_heights)))
+
   return(pin_heights)
 }
 

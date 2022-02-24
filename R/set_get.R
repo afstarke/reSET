@@ -359,8 +359,10 @@ set_get_accretions <- function(dbconn){
 
 #' set_get_pinlengths
 #'
-#' @param pin_numb numeric pin number most often passed in from an assigned column name.
-#' @param pin_table named vector pin number and pin length combinations, name being numeric pin number.
+#' @param pin_numb numeric pin number most often passed in from an assigned
+#'   column name.
+#' @param pin_table named vector pin number and pin length combinations, name
+#'   being numeric pin number.
 #'
 #' @return numeric pin length in mm
 #' @export
@@ -380,11 +382,13 @@ set_get_pinlengths <- function(pin_numb, pin_table){
 
 #' set_get_receiver_elevations
 #'
-#' @description  Retreive deep SET-rod receiver height as measured at the top of the receiver. NAVD88 is standard.
+#' @description  Retrieve deep SET-rod receiver heights as measured at the top of
+#'   the receiver. NAVD88.
 #' @param plotID
 #'
-#' @return sf object of surveyed plots with Lat/Lon, NAVD88 elevations, date surveyed.
-#' Used for mapping or correcting raw SET measures to NAVD88 elevaitons.
+#' @return sf object of surveyed plots with Lat/Lon, NAVD88 elevations, date
+#'   surveyed. Used for mapping or correcting raw SET measures to NAVD88
+#'   elevations.
 #' @export
 #'
 #' @examples
@@ -405,16 +409,23 @@ set_get_receiver_elevations <- function(dbconn){
   return(surveys)
 
 }
-#' set_get_absolute_heights adjust the measured raw pin height to NAVD88 elevation
+
+#' set_get_absolute_heights adjust the measured raw pin height to NAVD88
+#' elevation using data collected using static or RTK methods.
 #'
-#' @param pin_height numeric raw pin height (in mm) as measured in the field on the SET arm
-#' @param pin_numb Pin number associated with the measured height recorded (pin_height).
-#' Pins are uniquely identified to eliminate variation between readings of the SET
-#' @param pin_table pin height table, created by user
-#' @param SETarmHt Distance (height in mm) from the receiver end to the top of the SET arm where pin heights are measured from.
+#' @param pin_height numeric raw pin height (in mm) as measured in the field on
+#'   the SET arm
+#' @param pin_numb Pin number associated with the measured height recorded
+#'   (pin_height). Pins are uniquely identified to eliminate variation between
+#'   readings of the SET
+#' @param pin_table pin height table, created by user @seealso
+#'   \code{\link{set_get_pinlengths}}
+#' @param SETarmHt Distance (height in mm) from the receiver end to the top of
+#'   the SET arm where pin heights are measured from.
 #' @param receiverHt NAVD88 elevation of the SET receiver in meters
 #'
-#' @return numeric value representing the elevation of the marsh surface at the location of the SET pin measure.
+#' @return numeric value representing the elevation of the marsh surface at the
+#'   location of the SET pin measure.
 #' @export
 #'
 #' @examples
@@ -424,17 +435,16 @@ set_get_absolute_heights <- function(pin_height, pin_numb, pin_table, SETarmHt, 
   return(absHt)
 }
 
-# TODO: Redefine the intent behind the set_get_doublereads. Alternative approach would be to just correct all data.
-#' Check data for double reads.
-#' Investigate if and when a double read of a SET occurs. The result can be used to
-#' make adjustments to data and provide some adjustments to the long-term dataset as needed.
-#'
+#' TODO: Redefine the intent behind the set_get_doublereads. Alternative
+#' approach would be to just correct all data. ' Check data for double reads. '
+#' Investigate if and when a double read of a SET occurs. The result can be used
+#' to ' make adjustments to data and provide some adjustments to the long-term
+#' dataset as needed.
 #' @param dataSET
-#'
 #' @return tibble with data containing double reads.
 #' @export
-#'
 #' @examples
+#'
 set_get_doublereads <- function(dataSET){
   # urdid unique date read ID
   doubleids <- dataSET %>%

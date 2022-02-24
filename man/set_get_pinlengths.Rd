@@ -7,9 +7,11 @@
 set_get_pinlengths(pin_numb, pin_table)
 }
 \arguments{
-\item{pin_numb}{numeric pin number most often passed in from an assigned column name.}
+\item{pin_numb}{numeric pin number most often passed in from an assigned
+column name.}
 
-\item{pin_table}{named vector pin number and pin length combinations, name being numeric pin number.}
+\item{pin_table}{named vector pin number and pin length combinations, name
+being numeric pin number.}
 }
 \value{
 numeric pin length in mm

@@ -1,32 +1,41 @@
-Package: reSET
 Type: Package
-Date: 2018-12-07
-Title: Gather and analyze SET-MH data to assess marsh elevation trends 
+Package: reSET
+Title: Gather and analyze SET-MH data to assess marsh elevation trends
 Version: 0.1.0
-Authors@R: person("Adam", "Starke", email = "astarke@tnc.org", role = c("aut", "cre"))
+Date: 2018-12-07
+Authors@R: 
+    person("Adam", "Starke", , "astarke@tnc.org", role = c("aut", "cre"))
 Maintainer: Adam Starke <astarke@tnc.org>
 Description: View, manage, analyze and visualize SET-MH data.
-    Specifically for use along side the Marsh Elevation Monitoring Database (v.2.94) developed by the National Park Services
-    Inventory and Monitoring .
+    Specifically for use along side the Marsh Elevation Monitoring
+    Database (v.2.94) developed by the National Park Services Inventory
+    and Monitoring .
 License: GPL (>= 3)
-Encoding: UTF-8
-LazyData: true
-Imports:
-    broom,
-    DBI,
-    dplyr,
-    lubridate,
-    magrittr,
-    tidyverse,
-    odbc,
-    sf,
-    mapview
-RoxygenNote: 7.1.2
-Suggests: 
-    rmarkdown,
-    knitr,
-    shiny,
-    testthat
 URL: https://github.com/afstarke/reSET
 BugReports: https://github.com/afstarke/reSET/issues
-VignetteBuilder: knitr
+Imports:
+    broom,
+    cli,
+    DBI,
+    dplyr,
+    glue,
+    lifecycle,
+    lubridate,
+    magrittr,
+    mapview,
+    odbc,
+    rlang,
+    sf,
+    tidyverse,
+    withr
+Suggests: 
+    knitr,
+    plotly,
+    rmarkdown,
+    shiny,
+    testthat
+VignetteBuilder: 
+    knitr
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.2

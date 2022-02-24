@@ -2,25 +2,32 @@
 % Please edit documentation in R/set_get.R
 \name{set_get_absolute_heights}
 \alias{set_get_absolute_heights}
-\title{set_get_absolute_heights adjust the measured raw pin height to NAVD88 elevation}
+\title{set_get_absolute_heights adjust the measured raw pin height to NAVD88
+elevation using data collected using static or RTK methods.}
 \usage{
 set_get_absolute_heights(pin_height, pin_numb, pin_table, SETarmHt, receiverHt)
 }
 \arguments{
-\item{pin_height}{numeric raw pin height (in mm) as measured in the field on the SET arm}
+\item{pin_height}{numeric raw pin height (in mm) as measured in the field on
+the SET arm}
 
-\item{pin_numb}{Pin number associated with the measured height recorded (pin_height).
-Pins are uniquely identified to eliminate variation between readings of the SET}
+\item{pin_numb}{Pin number associated with the measured height recorded
+(pin_height). Pins are uniquely identified to eliminate variation between
+readings of the SET}
 
-\item{pin_table}{pin height table, created by user}
+\item{pin_table}{pin height table, created by user @seealso
+\code{\link{set_get_pinlengths}}}
 
-\item{SETarmHt}{Distance (height in mm) from the receiver end to the top of the SET arm where pin heights are measured from.}
+\item{SETarmHt}{Distance (height in mm) from the receiver end to the top of
+the SET arm where pin heights are measured from.}
 
 \item{receiverHt}{NAVD88 elevation of the SET receiver in meters}
 }
 \value{
-numeric value representing the elevation of the marsh surface at the location of the SET pin measure.
+numeric value representing the elevation of the marsh surface at the
+  location of the SET pin measure.
 }
 \description{
-set_get_absolute_heights adjust the measured raw pin height to NAVD88 elevation
+set_get_absolute_heights adjust the measured raw pin height to NAVD88
+elevation using data collected using static or RTK methods.
 }

@@ -80,8 +80,8 @@ set_pinhts <- function(n_pins = 9){
 #' @examples
 #' pinhts <- get_pinhts()
 
-get_pinhts <- function(){
-  pin_heights <- readr::read_rds("pin_height_list.rds")
+get_pinhts <- function(path = "pin_height_list.rds"){
+  pin_heights <- readr::read_rds(path)
   stopifnot(is.vector(pin_heights), is.character(names(pin_heights)))
 
   return(pin_heights)

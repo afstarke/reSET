@@ -277,7 +277,7 @@ set_get_sets <- function(dbconn) {
     tidyr::separate(pin, c('name', 'note'), "_", remove = TRUE, fill = "right") %>%
     tidyr::separate(name, c('name', 'Pin_number'), 3, remove = TRUE) %>%
     dplyr::mutate(key = ifelse(is.na(note), yes = "Raw", no = note),
-                  pin_number = as.numeric(pin_number)) %>%
+                  Pin_number = as.numeric(Pin_number)) %>%
     dplyr::select(-note,-name) %>%
     dplyr::group_by(Position_ID, Start_Date) %>% distinct() %>%
     tidyr::spread(key = key, value = measure) %>%

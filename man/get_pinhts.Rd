@@ -4,7 +4,7 @@
 \alias{get_pinhts}
 \title{pull in default pin_height_list.rds}
 \usage{
-get_pinhts()
+get_pinhts(path = "pin_height_list.rds")
 }
 \value{
 rds object read into session

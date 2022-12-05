@@ -112,3 +112,14 @@ set_to_setr <- function(dataSET){
   return(dat)
 }
 
+
+get_pin_issues <- function(dbconn){
+  if (!DBI::dbIsValid(dbconn)) {
+    warning("Connect to database prior to running any set_get operations.")
+  }
+  # Connect to tables containing set data. Munge here instead of bringing in to R env.
+  set_data <- set_get_sets(dbconn)
+  issues <- set_data %>% filter(!is.na(Notes))
+  dput(unique(issues$Notes))
+
+}

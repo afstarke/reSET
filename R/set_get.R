@@ -211,7 +211,7 @@ set_get_samplingevents <- function(dbconn){
 #' @examples
 #' # ADD_EXAMPLES_HERE
 #'
-set_get_sets <- function(dbconn) {
+set_get_sets <- function(dbconn, ...) {
   if (!DBI::dbIsValid(dbconn)) {
     warning("Connect to database prior to running any set_get operations.")
   }
@@ -293,7 +293,7 @@ set_get_sets <- function(dbconn) {
     dplyr::mutate(Raw = as.numeric(Raw)) %>%
     dplyr::filter(!is.na(Raw))
 
-  pins <- set_check_pins(SET.data.long) # change the approach to give a message saying that there are issues with some pins as ided in set_check_pins
+  pins <- set_check_pins(SET.data.long, issues = ...) # change the approach to give a message saying that there are issues with some pins as ided in set_check_pins
   SET.data.long <- SET.data.long %>%
     dplyr::ungroup() %>%
     dplyr::group_by(pin_ID) %>% # reinforce that the grouping is based on pins

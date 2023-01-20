@@ -19,6 +19,3 @@ set_check_widget
 Opens a Shiny widget that allows for browsing potential data entry issues
 or exclude outliers.
 }
-\examples{
-
-}

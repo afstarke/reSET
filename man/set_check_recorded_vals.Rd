@@ -18,6 +18,3 @@ This function requires a connection to the DB compared to the
 other functions that take the SET data due to the methods used for converting
 character values to numerics.
 }
-\examples{
-
-}

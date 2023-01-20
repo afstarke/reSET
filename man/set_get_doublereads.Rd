@@ -20,6 +20,3 @@ Investigate if and when a double read of a SET occurs. The result can be used
 to ' make adjustments to data and provide some adjustments to the long-term
 dataset as needed.
 }
-\examples{
-
-}

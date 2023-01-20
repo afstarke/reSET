@@ -23,6 +23,3 @@ This information can be used to generate a list of flags that can act as a filte
 further in the workflow. This allows the removal of certain data points from the analysis without
 removing the datapoint from the dataset. Secondarily these flags can be used in QA/QC workflows
 }
-\examples{
-
-}

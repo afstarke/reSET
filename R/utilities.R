@@ -113,6 +113,14 @@ set_to_setr <- function(dataSET){
 }
 
 
+#' Get noted pin issues.
+#'
+#' @param dbconn Connection to Database returned from set_get_db
+#'
+#' @return a vector of text strings as written in the database.
+#' @export
+#'
+#' @examples
 get_pin_issues <- function(dbconn){
   if (!DBI::dbIsValid(dbconn)) {
     warning("Connect to database prior to running any set_get operations.")

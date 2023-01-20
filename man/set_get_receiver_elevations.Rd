@@ -18,6 +18,3 @@ sf object of surveyed plots with Lat/Lon, NAVD88 elevations, date
 Retrieve deep SET-rod receiver heights as measured at the top of
   the receiver. NAVD88.
 }
-\examples{
-
-}

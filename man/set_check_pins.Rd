@@ -24,7 +24,3 @@ returns a tibble of measures that had recorded a note consisting of an
 'issue' i.e. mussel hole, or grass tuft. Allows the filtering of these pins
 in analysis downstream in set_clean_pins().
 }
-\examples{
-
-
-}

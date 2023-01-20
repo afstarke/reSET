@@ -4,7 +4,7 @@
 \alias{set_get_sets}
 \title{set_get_sets}
 \usage{
-set_get_sets(dbconn)
+set_get_sets(dbconn, ...)
 }
 \arguments{
 \item{dbconn}{Connection to Database returned from set_get_db}

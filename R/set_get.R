@@ -191,8 +191,8 @@ set_get_samplingevents <- function(dbconn){
 
 
   StudyStations <- set_get_stations(dbconn)
-  Samplings <- dplyr::inner_join(StudyStations, Events, by= "Location_ID")
-  Samplings2 <- dplyr::inner_join(Samplings, SET_readers, by = "Event_ID")
+  Samplings <- dplyr::left_join(StudyStations, Events, by= "Location_ID")
+  Samplings2 <- dplyr::left_join(Samplings, SET_readers, by = "Event_ID")
 
   attr(Samplings2, which = "File last updated") <- attr(dbconn, which = "File last updated")
 
@@ -237,7 +237,7 @@ set_get_sets <- function(dbconn, ...) {
   # Join the measured SET pin data to the positions to convert Position_ID to a arm direction
   SET <- dplyr::left_join(SET_data, SET_positions, by = "Position_ID") %>% dplyr::collect()
   # TODO: finish the munging steps in here to output the long format SET data with associated reader info.
-  SET.data <- dplyr::inner_join(SET, SET_samplings, by="Event_ID")
+  SET.data <- dplyr::left_join(SET, SET_samplings, by="Event_ID")
   # Munge
   # BUG: There's a set of duplicated values being introduced in here somewhere. Presumably by an indirect join with the Survey table
   SET.data1 <- SET.data %>%

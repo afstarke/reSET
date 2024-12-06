@@ -4,13 +4,13 @@
 \alias{set_get_stations}
 \title{set_get_stations}
 \usage{
-set_get_stations(dbconn)
+set_get_stations(dbconn, epsg = 4269)
 }
 \arguments{
 \item{dbconn}{Connection to Database returned from set_get_db}
 }
 \value{
-sf object containing SET-MH stations. Includes survey elevation data as well.
+sf object containing SET-MH stations. Includes survey elevation data for sites collected.
 }
 \description{
 Retrieve SET-MH stations from database as an sf object. conversion of coordinates on the fly

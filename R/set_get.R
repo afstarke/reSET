@@ -62,12 +62,12 @@ set_get_DB <- function(dbPath) {
 #'
 #' @param dbconn Connection to Database returned from set_get_db
 #'
-#' @return sf object containing SET-MH stations. Includes survey elevation data as well.
+#' @return sf object containing SET-MH stations. Includes survey elevation data for sites collected.
 #' @export
 #' @examples
 #' # studyStations <- set_get_DB(path) %>% set_get_stations()
 
-set_get_stations <- function(dbconn) {
+set_get_stations <- function(dbconn, epsg = 4269) {
   if (!DBI::dbIsValid(dbconn)) {
     warning("Connect to database prior to running any set_get_* operations.")
   }
@@ -82,7 +82,8 @@ set_get_stations <- function(dbconn) {
   # multiple measures on/at the same stations. Determine survey summary method to use (mean, 'best', etc)
   # COMBAK: Fixed temporarily by entering the 'best available' survey data into the survey datasheet.
   # Avoided some complexities and nuances with survey method variations across sites.
-  # TODO: Add a filter/query method to return only sites or projects of interest.
+  # NOTE: that multiple surveys will also provide multiple coordinate locations as well.
+
   # TODO: Determine how to handle elevation surveys. There's 2 locations for this data entry-
   # 1 in the survey form and 1 in the site location data.
   # Could pull all data from survey forms and average elevations and height- or do
@@ -105,16 +106,33 @@ set_get_stations <- function(dbconn) {
     sapply(strsplit(s, split = " "), cap, USE.NAMES = !is.null(names(s)))
   }
 
-  StudyStations <- StudyStations %>% dplyr::mutate(Stratafication = as.factor(capwords(Stratafication)),
-                                                   SET_Established_Date = as.Date(SET_Established_Date))
-
-
   # Convert to sf object.
-  StudyStations <- StudyStations %>% sf::st_as_sf(coords = c("X_Coord", "Y_Coord"), crs = 4326) # make sf
+  StudyStations <- StudyStations %>%
+    # make sf but note that the epsg isn't neccesarily correct for all stations since
+    # some were collected in WGS and some in NAD88.
+    sf::st_as_sf(coords = c("X_Coord", "Y_Coord"), crs = epsg) %>%
+    dplyr::mutate(Stratafication = as.factor(capwords(Stratafication)),
+                  SET_Established_Date = as.Date(SET_Established_Date))
 
-  attr(StudyStations, which = "File last updated") <- attr(dbconn, which = "File last updated")
+  reprojected_stations <- StudyStations %>%
+    group_by(Coord_System, Datum, UTM_Zone, Coord_Units) %>%
+    nest_by(.key = 'stations') %>%
+    mutate(wkt = gdalraster::srs_to_wkt(Datum)) %>%
+    rowwise() %>%
+    dplyr::mutate(
+      projected_stations = list(sf::st_set_crs(x = stations, sf::st_crs(wkt))),
+      reprojected_stations = list(sf::st_transform(x = projected_stations, epsg))) %>%
+    dplyr::select(reprojected_stations) %>%
+    tidyr::unnest(reprojected_stations) %>%
+    sf::st_as_sf() %>%
+    sf::st_set_crs(epsg)
 
-  return(StudyStations)
+
+
+
+  attr(reprojected_stations, which = "File last updated") <- attr(dbconn, which = "File last updated")
+
+  return(reprojected_stations)
 }
 
 #' set_get_readers

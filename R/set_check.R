@@ -1,8 +1,17 @@
 # set_check_*
 # Family of functions for QA of SET-MH data returns helpful messages on QA concerns.
-# set_check_readers = check SET reader consistency across events.
-#   Need to figure out how to address this is cases when readers are inconsistent.
-# set_check_measures = check for large changes in measures and flag
+#
+#' set_check_measures = check for large changes in measures and flag
+#' set_check_pins = checks for pins that landed on obstacles to the marsh surface (holes, mussels, etc)
+#' set_check_notes =
+#' set_check_readers = check SET reader consistency across events.
+#'
+#'
+#'
+#'
+#' TODO: Need to figure out how to address this is cases when readers are inconsistent.
+#'
+#'
 
 #' set_check_measures
 #'
@@ -44,13 +53,14 @@ set_check_measures <- function(dataSET){
 #' @param issues Defaults to some common note flags that have been used, (hole, mussle, mussel hole)
 #' @param ... additional character strings of notes to flag.
 #'
-#' @return tibble containing SA data in long format. This tibble must have a "Notes" column to operate proprerly.
+#' @return tibble containing SET data in long format. This tibble must have a "Notes" column to operate properly.
 #' @export
 #' @examples
 #'
 #'
 set_check_pins <- function(dataSET, issues = c("Hole", "hole", "mussel", "Holr", "Shell", "Mussel", "edge of hole", "hole next to mussel"), ...){
   issues <- c(issues, ...) # add new issue notes if needed.
+
   troublePins <- dataSET %>% dplyr::ungroup() %>%
     dplyr::select(Notes, pin_ID) %>% # TODO: make this more flexible to allow for other 'comment/note' fields.
     dplyr::filter(complete.cases(.)) %>% # remove all pins that don't have a note.
@@ -58,7 +68,7 @@ set_check_pins <- function(dataSET, issues = c("Hole", "hole", "mussel", "Holr",
 
   pinlistClean <- unique(troublePins$pin_ID)
 
-  issuePins <- troublePins %>% filter(Notes %in% issues)
+  issuePins <- troublePins %>% dplyr::filter(Notes %in% issues)
   issuePins
 
 }
@@ -79,7 +89,7 @@ set_check_pins <- function(dataSET, issues = c("Hole", "hole", "mussel", "Holr",
 #'
 set_check_notes <- function(dataSET){
   notes <- dataSET %>% dplyr::ungroup() %>%
-    dplyr::select(Notes) %>% tidyr::ddrop_na() %>%
+    dplyr::select(Notes) %>% tidyr::drop_na() %>%
     unique() %>% dplyr::pull()
   notes
 }
@@ -247,19 +257,20 @@ set_check_recorded_vals <- function(dbconn) {
 #' approach with one that allows for larger gaps in the data. Perhaps also catches more potential
 #' issues for readings that occurred more closely together.
 #'
-#' @param duration character string of the time interval to use for threshold calc; "1 year" default.
-#' Leverages lubridates capability to parse durations so values like "1 week" and "10 months" are accpetable.
-#' @param mm_change Change in pin height over the duration provided that will lead to a flag in the record in mm.
+#' @param duration character string of the time interval to use for threshold calculation; "1 year" default.
+#' Leverages `lubridate` capability to parse duration so values such as "1 week" and "10 months" are acceptable.
+#' @param mm_change Change in pin height over the duration provided. Values greater than this (within the specified
+#' duration) will be given a flag.
 #' @param dataSET SET data as returned by set_get_sets.
 #' @param drop_rows TRUE, drops rows that don't meet the flag criteria. To return the full dataset, with
-#' an appended column of flag set to FALSE.
+#' an appended column of flag set to FALSE. Defaults to FALSE to protect unwanted removal.
 #'
 #' @return tibble of SET data that's been trimmed down to show only measures that were made that fell above the
 #' the treshold passed in the function call.
 #' @export
 #'
 #' @examples set_check_change(duration = "3 months", mm_change = 5) # > 5 mm change over 3 months will
-set_check_change <- function(dataSET, duration = "1 year", mm_change = 20, drop_rows = TRUE){
+set_check_change <- function(dataSET, duration = "1 year", mm_change = 20, drop_rows = FALSE){
 
   dec_year <-  lubridate::duration(duration)/lubridate::dyears(1)
   threshold <- mm_change / dec_year

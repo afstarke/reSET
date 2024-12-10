@@ -17,7 +17,7 @@ set_check_pins(
 \item{...}{additional character strings of notes to flag.}
 }
 \value{
-tibble containing SA data in long format. This tibble must have a "Notes" column to operate proprerly.
+tibble containing SET data in long format. This tibble must have a "Notes" column to operate properly.
 }
 \description{
 returns a tibble of measures that had recorded a note consisting of an

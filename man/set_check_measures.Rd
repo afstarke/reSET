@@ -2,7 +2,10 @@
 % Please edit documentation in R/set_check.R
 \name{set_check_measures}
 \alias{set_check_measures}
-\title{set_check_measures}
+\title{set_check_measures = check for large changes in measures and flag
+set_check_pins = checks for pins that landed on obstacles to the marsh surface (holes, mussels, etc)
+set_check_notes =
+set_check_readers = check SET reader consistency across events.}
 \usage{
 set_check_measures(dataSET)
 }
@@ -13,6 +16,17 @@ set_check_measures(dataSET)
 tibble containing SET data in long format
 }
 \description{
+set_check_measures = check for large changes in measures and flag
+set_check_pins = checks for pins that landed on obstacles to the marsh surface (holes, mussels, etc)
+set_check_notes =
+set_check_readers = check SET reader consistency across events.
+}
+\details{
+TODO: Need to figure out how to address this is cases when readers are inconsistent.
+
+
+set_check_measures
+
 returns a list of pins that have issues indicated or suspicious incremental changes. Enhanced
 further with set_check_change function.
 }

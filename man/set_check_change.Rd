@@ -12,19 +12,20 @@ set_check_change(
   dataSET,
   duration = "1 year",
   mm_change = 20,
-  drop_rows = TRUE
+  drop_rows = FALSE
 )
 }
 \arguments{
 \item{dataSET}{SET data as returned by set_get_sets.}
 
-\item{duration}{character string of the time interval to use for threshold calc; "1 year" default.
-Leverages lubridates capability to parse durations so values like "1 week" and "10 months" are accpetable.}
+\item{duration}{character string of the time interval to use for threshold calculation; "1 year" default.
+Leverages `lubridate` capability to parse duration so values such as "1 week" and "10 months" are acceptable.}
 
-\item{mm_change}{Change in pin height over the duration provided that will lead to a flag in the record in mm.}
+\item{mm_change}{Change in pin height over the duration provided. Values greater than this (within the specified
+duration) will be given a flag.}
 
 \item{drop_rows}{TRUE, drops rows that don't meet the flag criteria. To return the full dataset, with
-an appended column of flag set to FALSE.}
+an appended column of flag set to FALSE. Defaults to FALSE to protect unwanted removal.}
 }
 \value{
 tibble of SET data that's been trimmed down to show only measures that were made that fell above the

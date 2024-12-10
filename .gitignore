@@ -6,3 +6,5 @@ scratch.R
 inst/doc
 /doc/
 /Meta/
+.Rprofile
+Rprofile.site

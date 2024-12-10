@@ -8,6 +8,8 @@ set_get_stations(dbconn, epsg = 4269)
 }
 \arguments{
 \item{dbconn}{Connection to Database returned from set_get_db}
+
+\item{epsg}{desired coordinate system of the output using epsg code.}
 }
 \value{
 sf object containing SET-MH stations. Includes survey elevation data for sites collected.

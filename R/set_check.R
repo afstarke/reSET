@@ -78,18 +78,20 @@ set_check_pins <- function(dataSET, issues = c("Hole", "hole", "mussel", "Holr",
 #' @examples
 #'
 set_check_notes <- function(dataSET){
-  notes <- dataSET %>% ungroup() %>%
-    select(Notes) %>% drop_na() %>%
-    unique() %>% pull()
+  notes <- dataSET %>% dplyr::ungroup() %>%
+    dplyr::select(Notes) %>% tidyr::ddrop_na() %>%
+    unique() %>% dplyr::pull()
   notes
 }
+
+
 
 #' Check set data for potential biases in SET reader through a graphical and
 #' optional tabular format
 #' @description Used in conjunction with set_get_doublereads
 #' @param dataSET  SET data as returned from set_get_sets
 #'
-#' @return
+#' @return `ggplotly` interactive plot
 #' @export
 #'
 #' @examples
@@ -253,7 +255,7 @@ set_check_recorded_vals <- function(dbconn) {
 #' an appended column of flag set to FALSE.
 #'
 #' @return tibble of SET data that's been trimmed down to show only measures that were made that fell above the
-#' the treshold identified in the function call.
+#' the treshold passed in the function call.
 #' @export
 #'
 #' @examples set_check_change(duration = "3 months", mm_change = 5) # > 5 mm change over 3 months will
@@ -271,10 +273,10 @@ set_check_change <- function(dataSET, duration = "1 year", mm_change = 20, drop_
         chng_thresh > threshold ~ TRUE,
         TRUE ~ FALSE
       )
-    ) %>% select(Site_Name:Arm_Direction, Date:issuePin, flag_change)
+    ) %>% dplyr::select(Site_Name:Arm_Direction, Date:issuePin, flag_change)
 
   if(drop_rows) {
-    SET_data <- SET_data %>% filter(flag_change)}
+    SET_data <- SET_data %>% dplyr::filter(flag_change)}
   else{
     SET_data <- SET_data
   }

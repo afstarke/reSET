@@ -61,6 +61,7 @@ set_get_DB <- function(dbPath) {
 #' Retrieve SET-MH stations from database as an sf object. conversion of coordinates on the fly
 #'
 #' @param dbconn Connection to Database returned from set_get_db
+#' @param epsg desired coordinate system of the output using epsg code.
 #'
 #' @return sf object containing SET-MH stations. Includes survey elevation data for sites collected.
 #' @export
@@ -467,12 +468,12 @@ set_get_absolute_heights <- function(pin_height, pin_numb, pin_table, SETarmHt, 
 set_get_doublereads <- function(dataSET){
   # urdid unique date read ID
   doubleids <- dataSET %>%
-    mutate(urdid = paste(pin_ID, Date, sep = "_")) %>%
-    group_by(urdid) %>% tally() %>%
-    filter(n > 1) %>% pull(urdid)
+    dplyr::mutate(urdid = paste(pin_ID, Date, sep = "_")) %>%
+    dplyr::group_by(urdid) %>% dplyr::tally() %>%
+    dplyr::filter(n > 1) %>% dplyr::pull(urdid)
 
   dataSET %>%
-    mutate(urdid = paste(pin_ID, Date, sep = "_")) %>%
-    filter(urdid %in% doubleids)
+    dplyr::mutate(urdid = paste(pin_ID, Date, sep = "_")) %>%
+    dplyr::filter(urdid %in% doubleids)
 
 }

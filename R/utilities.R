@@ -23,8 +23,8 @@ NULL
 #'
 #' @description This utility function creates a named vector representing the
 #'   pin length with a name as the pin number. This table/vector is used in the
-#' @seealso {\code{\link{set_get_pinlengths}} and
-#' @seealso {\code{\link{set_get_absolute_heights}} functions which adjust the
+#' @seealso \code{\link{set_get_pinlengths} and
+#' @seealso \code{\link{set_get_absolute_heights} functions which adjust the
 #'   measured pin height taken from the SET arm to the NAVD88 datum. This
 #'   utility is meant to be a helper function and would only need to be run once
 #'   for creating the named vector and storing it within the project folder

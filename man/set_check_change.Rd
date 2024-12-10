@@ -28,7 +28,7 @@ an appended column of flag set to FALSE.}
 }
 \value{
 tibble of SET data that's been trimmed down to show only measures that were made that fell above the
-the treshold identified in the function call.
+the treshold passed in the function call.
 }
 \description{
 set_check_change

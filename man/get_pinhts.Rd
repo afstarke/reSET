@@ -12,6 +12,3 @@ rds object read into session
 \description{
 pull in default pin_height_list.rds
 }
-\examples{
-pinhts <- get_pinhts()
-}

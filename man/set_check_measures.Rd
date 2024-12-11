@@ -2,33 +2,19 @@
 % Please edit documentation in R/set_check.R
 \name{set_check_measures}
 \alias{set_check_measures}
-\title{set_check_measures = check for large changes in measures and flag
-set_check_pins = checks for pins that landed on obstacles to the marsh surface (holes, mussels, etc)
-set_check_notes =
-set_check_readers = check SET reader consistency across events.}
+\title{set_check_measures}
 \usage{
 set_check_measures(dataSET)
 }
 \arguments{
-\item{dbconn}{Connection to Database returned from set_get_db}
+\item{dataSET}{SET data from set_get_sets}
 }
 \value{
 tibble containing SET data in long format
 }
 \description{
-set_check_measures = check for large changes in measures and flag
-set_check_pins = checks for pins that landed on obstacles to the marsh surface (holes, mussels, etc)
-set_check_notes =
-set_check_readers = check SET reader consistency across events.
-}
-\details{
-TODO: Need to figure out how to address this is cases when readers are inconsistent.
-
-
-set_check_measures
-
-returns a list of pins that have issues indicated or suspicious incremental changes. Enhanced
-further with set_check_change function.
+returns a list of pins that have issues indicated in the notes or has
+suspicious incremental changes. Enhanced further with set_check_change function.
 }
 \examples{
 # ADD_EXAMPLES_HERE

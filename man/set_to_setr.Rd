@@ -17,6 +17,7 @@ calc_change_cumu and calc_change_incr functions.
 set data to SETr data.
 }
 \examples{
-set_to_setr(SET_data) \%>\% SETr::calc_change_incr() # returns
-list of dataframes of incremental change rates.
+
+# returns list of dataframes of incremental change rates.
+
 }

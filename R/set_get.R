@@ -301,6 +301,8 @@ set_get_sets <- function(dbconn, ...) {
     dplyr::group_by(Position_ID, Start_Date) %>% distinct() %>%
     tidyr::spread(key = key, value = measure) %>%
     dplyr::mutate(pin_ID = paste(Position_ID, Pin_number, sep = "_")) %>% # Above all transposing and repositioning dataframe.
+    # TODO: Add a measurementID that would be unique ID for each data point.
+    # Consider concatinating pin_id and days from station first read. This will act as a means to search and flag data points throughout.
     dplyr::ungroup() %>% # Below- adding columns, renaming variables, and reordering rows.
     dplyr::rename(Date = Start_Date, Location_ID = Location_ID.x) %>%  # rename SET reading date
     dplyr::group_by(pin_ID) %>% # group by pinID to
@@ -320,7 +322,7 @@ set_get_sets <- function(dbconn, ...) {
     dplyr::mutate(Change = as.numeric(Raw) - as.numeric(Raw[1])) %>%
     dplyr::mutate(incrementalChange = c(NA, diff(Change))) %>%
     dplyr::mutate(incrementalTime = DecYear - dplyr::lag(DecYear, n = 1)) %>%
-    dplyr::mutate(issuePin = pin_ID %in% pins$pin_ID)
+    dplyr::mutate(issuePin = pin_ID %in% pins$pin_ID) # TODO: drop this column creation when new methods of flagging established.
 
   attr(SET.data.long, 'Datainfo') <-"Full SET dataset including all measures in a LONG format" # give dataframe some metadata attributes
   attr(SET.data.long, 'Date of data retreival') <- format(lubridate::today(), '%b %d %Y')

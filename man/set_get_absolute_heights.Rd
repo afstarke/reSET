@@ -25,7 +25,7 @@ the SET arm where pin heights are measured from.}
 }
 \value{
 numeric value representing the elevation of the marsh surface at the
-  location of the SET pin measure.
+location of the SET pin measure.
 }
 \description{
 set_get_absolute_heights adjust the measured raw pin height to NAVD88

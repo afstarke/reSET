@@ -3,7 +3,7 @@
 \name{set_check_notes}
 \alias{set_check_notes}
 \title{set_check_notes
-Used to check what notes have been made which can indicate pins that may have measurement bias.
+Extract all the notes that have been made which can indicate pins that may have measurement bias.
 This information can be used to generate a list of flags that can act as a filter for analysis
 further in the workflow. This allows the removal of certain data points from the analysis without
 removing the datapoint from the dataset. Secondarily these flags can be used in QA/QC workflows}
@@ -14,12 +14,18 @@ set_check_notes(dataSET)
 \item{dataSET}{SET dataset from get_set_sets()}
 }
 \value{
-character vector of unique notes made within data that is p
+character vector of unique notes made within data set.
+These notes can be edited and recycled for flagging measures \link{(set_check_measures)}
+or flagging pins \link{(set_check_pins)}
 }
 \description{
 set_check_notes
-Used to check what notes have been made which can indicate pins that may have measurement bias.
+Extract all the notes that have been made which can indicate pins that may have measurement bias.
 This information can be used to generate a list of flags that can act as a filter for analysis
 further in the workflow. This allows the removal of certain data points from the analysis without
 removing the datapoint from the dataset. Secondarily these flags can be used in QA/QC workflows
+}
+\examples{
+pins_to_drop <- set_check_notes(set_data)
+
 }

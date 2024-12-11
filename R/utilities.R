@@ -11,15 +11,10 @@
 #' @export
 #' @param lhs,rhs A visualisation and a function to apply to it
 #' @examples
-#' # Instead of
-#' layer_points(ggvis(mtcars, ~mpg, ~wt))
-#' # you can write
-#' mtcars %>% ggvis(~mpg, ~wt) %>% layer_points()
 NULL
 
 
-# Utility to create pin height vector
-#' Create pin height table (named vector) using prompts.
+#' Utility to create pin height vector table (named vector) using prompts.
 #'
 #' @description This utility function creates a named vector representing the
 #'   pin length with a name as the pin number. This table/vector is used in the
@@ -38,8 +33,7 @@ NULL
 #' @export
 #'
 #' @examples
-#' pinHts <- set_pinhts()
-#' pinHts_18 <- set_pinhts(n_pins = 18)
+#'
 #'
 set_pinhts <- function(n_pins = 9){
 
@@ -78,7 +72,7 @@ set_pinhts <- function(n_pins = 9){
 #' @export
 #'
 #' @examples
-#' pinhts <- get_pinhts()
+#'
 
 get_pinhts <- function(path = "pin_height_list.rds"){
   pin_heights <- readr::read_rds(file = path)
@@ -86,6 +80,7 @@ get_pinhts <- function(path = "pin_height_list.rds"){
 
   return(pin_heights)
 }
+
 
 
 #' set data to SETr data.
@@ -97,8 +92,9 @@ get_pinhts <- function(path = "pin_height_list.rds"){
 #' @export
 #'
 #' @examples
-#' set_to_setr(SET_data) %>% SETr::calc_change_incr() # returns
-#' list of dataframes of incremental change rates.
+#'
+#' # returns list of dataframes of incremental change rates.
+#'
 set_to_setr <- function(dataSET){
 
   dat <- dataSET %>% dplyr::mutate(pin_ht_cm = Raw * 100) %>%
@@ -112,22 +108,3 @@ set_to_setr <- function(dataSET){
   return(dat)
 }
 
-
-#' Get noted pin issues.
-#'
-#' @param dbconn Connection to Database returned from set_get_db
-#'
-#' @return a vector of text strings as written in the database.
-#' @export
-#'
-#' @examples
-get_pin_issues <- function(dbconn){
-  if (!DBI::dbIsValid(dbconn)) {
-    warning("Connect to database prior to running any set_get operations.")
-  }
-  # Connect to tables containing set data. Munge here instead of bringing in to R env.
-  set_data <- set_get_sets(dbconn)
-  issues <- set_data %>% filter(!is.na(Notes))
-  dput(unique(issues$Notes))
-
-}

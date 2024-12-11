@@ -12,7 +12,7 @@ set_check_pins(
 )
 }
 \arguments{
-\item{issues}{Defaults to some common note flags that have been used, (hole, mussle, mussel hole)}
+\item{issues}{Defaults to some common note flags that have been used, (hole, mussel, mussel hole)}
 
 \item{...}{additional character strings of notes to flag.}
 }
@@ -20,7 +20,8 @@ set_check_pins(
 tibble containing SET data in long format. This tibble must have a "Notes" column to operate properly.
 }
 \description{
-returns a tibble of measures that had recorded a note consisting of an
-'issue' i.e. mussel hole, or grass tuft. Allows the filtering of these pins
-in analysis downstream in set_clean_pins().
+returns a vector of pin_ID's that had recorded a note consisting of an
+'issue' i.e. mussel hole, or grass tuft. These are pins that, at any
+point in the data set, had an issue noted. This vector can be used in
+filtering pins from inclusion in analysis.
 }

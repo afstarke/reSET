@@ -19,7 +19,7 @@ set_check_change(
 \item{dataSET}{SET data as returned by set_get_sets.}
 
 \item{duration}{character string of the time interval to use for threshold calculation; "1 year" default.
-Leverages `lubridate` capability to parse duration so values such as "1 week" and "10 months" are acceptable.}
+Leverages \code{lubridate} capability to parse duration so values such as "1 week" and "10 months" are acceptable.}
 
 \item{mm_change}{Change in pin height over the duration provided. Values greater than this (within the specified
 duration) will be given a flag.}

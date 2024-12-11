@@ -11,7 +11,7 @@ set_check_doublereads(dataSET)
 \item{dataSET}{SET data as returned from set_get_sets}
 }
 \value{
-`ggplotly` interactive plot
+\code{ggplotly} interactive plot
 }
 \description{
 Used in conjunction with set_get_doublereads

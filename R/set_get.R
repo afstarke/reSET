@@ -300,14 +300,13 @@ set_get_sets <- function(dbconn, ...) {
     dplyr::select(-note,-name) %>%
     dplyr::group_by(Position_ID, Start_Date) %>% distinct() %>%
     tidyr::spread(key = key, value = measure) %>%
-    dplyr::mutate(pin_ID = paste(Position_ID, Pin_number, sep = "_")) %>% # Above all transposing and repositioning dataframe.
-    # TODO: Add a measurementID that would be unique ID for each data point.
-    # Consider concatinating pin_id and days from station first read. This will act as a means to search and flag data points throughout.
+    dplyr::mutate(pin_ID = paste(Position_ID, Pin_number, sep = "_")) %>%  # Above all transposing and repositioning dataframe.
     dplyr::ungroup() %>% # Below- adding columns, renaming variables, and reordering rows.
     dplyr::rename(Date = Start_Date, Location_ID = Location_ID.x) %>%  # rename SET reading date
     dplyr::group_by(pin_ID) %>% # group by pinID to
     dplyr::mutate(EstDate = min(Date)) %>%  # create a column identifying the EstDate (date of the first SET-MH station reading)
     dplyr::ungroup() %>%
+    dplyr::mutate(measure_id = paste0(pin_ID, "_", sub(" ", "_", tolower(SET_Reader)) , as.numeric(difftime(Date, EstDate, units = "days")))) %>%
     dplyr::mutate(DecYear = round((((
       as.numeric(difftime(.$Date, .$EstDate, units = "days"))
     )) / 365), 3)) %>%

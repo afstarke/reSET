@@ -14,7 +14,8 @@ tibble containing SET data in long format
 }
 \description{
 returns a list of pins that have issues indicated in the notes or has
-suspicious incremental changes. Enhanced further with set_check_change function.
+suspicious incremental changes. These are individual measrements and differ from
+set_check_pins which returns pin_id. Enhanced further with set_check_change function.
 }
 \examples{
 # ADD_EXAMPLES_HERE

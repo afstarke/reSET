@@ -2,11 +2,7 @@
 % Please edit documentation in R/set_check.R
 \name{set_check_notes}
 \alias{set_check_notes}
-\title{set_check_notes
-Extract all the notes that have been made which can indicate pins that may have measurement bias.
-This information can be used to generate a list of flags that can act as a filter for analysis
-further in the workflow. This allows the removal of certain data points from the analysis without
-removing the datapoint from the dataset. Secondarily these flags can be used in QA/QC workflows}
+\title{check field notes for potential issues relating to pin readings}
 \usage{
 set_check_notes(dataSET)
 }
@@ -16,10 +12,10 @@ set_check_notes(dataSET)
 \value{
 character vector of unique notes made within data set.
 These notes can be edited and recycled for flagging measures \link{(set_check_measures)}
-or flagging pins \link{(set_check_pins)}
+or flagging pins \link{(set_check_pins)}. Returned as a \code{dput} output for easy editing and
+use elsewhere.
 }
 \description{
-set_check_notes
 Extract all the notes that have been made which can indicate pins that may have measurement bias.
 This information can be used to generate a list of flags that can act as a filter for analysis
 further in the workflow. This allows the removal of certain data points from the analysis without

@@ -39,5 +39,5 @@ approach with one that allows for larger gaps in the data. Perhaps also catches 
 issues for readings that occurred more closely together.
 }
 \examples{
-set_check_change(duration = "3 months", mm_change = 5) # > 5 mm change over 3 months will
+set_check_change(dataSET = NULL, duration = "3 months", mm_change = 5) # > 5 mm change over 3 months will
 }

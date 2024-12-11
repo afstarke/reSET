@@ -10,11 +10,11 @@
 #
 #
 #
-# TODO: Need to figure out how to address this is cases when readers are inconsistent.
 #
 
 
-#' set_check_notes
+#' check field notes for potential issues relating to pin readings
+#'
 #' Extract all the notes that have been made which can indicate pins that may have measurement bias.
 #' This information can be used to generate a list of flags that can act as a filter for analysis
 #' further in the workflow. This allows the removal of certain data points from the analysis without
@@ -24,7 +24,8 @@
 #'
 #' @return character vector of unique notes made within data set.
 #' These notes can be edited and recycled for flagging measures [(set_check_measures)]
-#' or flagging pins [(set_check_pins)]
+#' or flagging pins [(set_check_pins)]. Returned as a `dput` output for easy editing and
+#' use elsewhere.
 #' @export
 #'
 #' @examples pins_to_drop <- set_check_notes(set_data)
@@ -74,7 +75,8 @@ set_check_pins <- function(dataSET, issues = c("Hole", "hole", "mussel", "Holr",
 #' set_check_measures
 #'
 #' returns a list of pins that have issues indicated in the notes or has
-#' suspicious incremental changes. Enhanced further with set_check_change function.
+#' suspicious incremental changes. These are individual measrements and differ from
+#' set_check_pins which returns pin_id. Enhanced further with set_check_change function.
 #'
 #' @param dataSET SET data from set_get_sets
 #'

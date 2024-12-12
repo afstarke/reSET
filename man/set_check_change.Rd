@@ -22,14 +22,15 @@ set_check_change(
 Leverages \code{lubridate} capability to parse duration so values such as "1 week" and "10 months" are acceptable.}
 
 \item{mm_change}{Change in pin height over the duration provided. Values greater than this (within the specified
-duration) will be given a flag.}
+duration) will be given a flag. Note: the reported change in the data is converted to an absolute change to
+capture both an increase and a decrease in the measured values.}
 
 \item{drop_rows}{TRUE, drops rows that don't meet the flag criteria. To return the full dataset, with
 an appended column of flag set to FALSE. Defaults to FALSE to protect unwanted removal.}
 }
 \value{
 tibble of SET data that's been trimmed down to show only measures that were made that fell above the
-the treshold passed in the function call.
+the threshold passed in the function call.
 }
 \description{
 set_check_change
@@ -37,7 +38,4 @@ Calculates the rate of change from provided change in time and change in pin hei
 Used for flagging and catching potential errors. Replaces the more simple incremental change
 approach with one that allows for larger gaps in the data. Perhaps also catches more potential
 issues for readings that occurred more closely together.
-}
-\examples{
-set_check_change(dataSET = NULL, duration = "3 months", mm_change = 5) # > 5 mm change over 3 months will
 }

@@ -25,3 +25,8 @@ returns a vector of pin_ID's that had recorded a note consisting of an
 point in the data set, had an issue noted. This vector can be used in
 filtering pins from inclusion in analysis.
 }
+\examples{
+NULL
+
+
+}

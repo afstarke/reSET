@@ -298,7 +298,8 @@ set_get_sets <- function(dbconn, ...) {
     dplyr::mutate(key = ifelse(is.na(note), yes = "Raw", no = note),
                   Pin_number = as.numeric(Pin_number)) %>%
     dplyr::select(-note,-name) %>%
-    dplyr::group_by(Position_ID, Start_Date) %>% distinct() %>%
+    dplyr::group_by(Position_ID, Start_Date) %>%
+    dplyr::distinct() %>%
     tidyr::spread(key = key, value = measure) %>%
     dplyr::mutate(pin_ID = paste(Position_ID, Pin_number, sep = "_")) %>%  # Above all transposing and repositioning dataframe.
     dplyr::ungroup() %>% # Below- adding columns, renaming variables, and reordering rows.
@@ -314,6 +315,7 @@ set_get_sets <- function(dbconn, ...) {
     dplyr::filter(!is.na(Raw))
 
   pins <- set_check_pins(SET.data.long, issues = ...) # change the approach to give a message saying that there are issues with some pins as ided in set_check_pins
+
   SET.data.long <- SET.data.long %>%
     dplyr::ungroup() %>%
     dplyr::group_by(pin_ID) %>% # reinforce that the grouping is based on pins
@@ -321,7 +323,7 @@ set_get_sets <- function(dbconn, ...) {
     dplyr::mutate(Change = as.numeric(Raw) - as.numeric(Raw[1])) %>%
     dplyr::mutate(incrementalChange = c(NA, diff(Change))) %>%
     dplyr::mutate(incrementalTime = DecYear - dplyr::lag(DecYear, n = 1)) %>%
-    dplyr::mutate(issuePin = pin_ID %in% pins$pin_ID) # TODO: drop this column creation when new methods of flagging established.
+    dplyr::mutate(issuePin = pin_ID %in% pins) # TODO: drop this column creation when new methods of flagging established.
 
   attr(SET.data.long, 'Datainfo') <-"Full SET dataset including all measures in a LONG format" # give dataframe some metadata attributes
   attr(SET.data.long, 'Date of data retreival') <- format(lubridate::today(), '%b %d %Y')
@@ -432,6 +434,7 @@ set_get_receiver_elevations <- function(dbconn){
   return(surveys)
 
 }
+
 
 #' set_get_absolute_heights adjust the measured raw pin height to NAVD88
 #' elevation using data collected using static or RTK methods.

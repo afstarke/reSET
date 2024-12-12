@@ -4,7 +4,12 @@
 \alias{set_check_measures}
 \title{set_check_measures}
 \usage{
-set_check_measures(dataSET)
+set_check_measures(
+  dataSET,
+  issues = c("Hole", "hole", "mussel", "Holr", "Shell", "Mussel", "edge of hole",
+    "hole next to mussel"),
+  ...
+)
 }
 \arguments{
 \item{dataSET}{SET data from set_get_sets}
@@ -13,11 +18,12 @@ set_check_measures(dataSET)
 tibble containing SET data in long format
 }
 \description{
-returns a list of pins that have issues indicated in the notes or has
-suspicious incremental changes. These are individual measrements and differ from
-set_check_pins which returns pin_id. Enhanced further with set_check_change function.
+returns a list of measures that have issues indicated in the notes or has
+suspicious incremental changes. These are individual measurements and differ from
+set_check_pins which returns pin_id for flagging an entire set of pin reads for a station direction.
 }
 \examples{
-# ADD_EXAMPLES_HERE
+NULL
+
 
 }

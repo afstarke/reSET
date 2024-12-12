@@ -22,6 +22,6 @@ further in the workflow. This allows the removal of certain data points from the
 removing the datapoint from the dataset. Secondarily these flags can be used in QA/QC workflows
 }
 \examples{
-pins_to_drop <- set_check_notes(set_data)
+NULL
 
 }

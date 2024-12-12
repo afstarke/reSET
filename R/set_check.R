@@ -28,7 +28,7 @@
 #' use elsewhere.
 #' @export
 #'
-#' @examples pins_to_drop <- set_check_notes(set_data)
+#' @examples NULL
 #'
 set_check_notes <- function(dataSET){
   notes <- dataSET %>% dplyr::ungroup() %>%
@@ -51,7 +51,7 @@ set_check_notes <- function(dataSET){
 #'
 #' @return tibble containing SET data in long format. This tibble must have a "Notes" column to operate properly.
 #' @export
-#' @examples
+#' @examples NULL
 #'
 #'
 set_check_pins <- function(dataSET, issues = c("Hole", "hole", "mussel", "Holr", "Shell", "Mussel", "edge of hole", "hole next to mussel"), ...){
@@ -63,10 +63,13 @@ set_check_pins <- function(dataSET, issues = c("Hole", "hole", "mussel", "Holr",
     dplyr::filter(Notes %in% issues)  # remove all pins that don't have a note flagged in 'issues'.
 
 
-  pinlistClean <- unique(troublePins$pin_ID) %>% `attr<-`("Datainfo", "List of pins that have reported issues (holes, etc)")
+  pinlist <- unique(troublePins$pin_ID)
 
-  issuePins <- troublePins %>% dplyr::filter(Notes %in% issues)
-  issuePins
+  attr(pinlist, which = "Data check info") <- paste0("List of pins that have reported issues: ", unlist(issues))
+
+  pinlist
+  # issuePins <- troublePins %>% dplyr::filter(Notes %in% issues)
+  # issuePins ## holdover - deciding on if returning vectors used for filtering is better approach.
 
 }
 
@@ -74,30 +77,31 @@ set_check_pins <- function(dataSET, issues = c("Hole", "hole", "mussel", "Holr",
 
 #' set_check_measures
 #'
-#' returns a list of pins that have issues indicated in the notes or has
-#' suspicious incremental changes. These are individual measrements and differ from
-#' set_check_pins which returns pin_id. Enhanced further with set_check_change function.
+#' returns a list of measures that have issues indicated in the notes or has
+#' suspicious incremental changes. These are individual measurements and differ from
+#' set_check_pins which returns pin_id for flagging an entire set of pin reads for a station direction.
 #'
 #' @param dataSET SET data from set_get_sets
 #'
 #' @return tibble containing SET data in long format
 #' @export
-#' @examples
-#' # ADD_EXAMPLES_HERE
+#' @examples NULL
+#'
 #'
 
-set_check_measures <- function(dataSET){
-  # create tibble of potential problem pins with date, site, pin info for QA checks.
-  probs <- set_check_pins(dataSET)
+set_check_measures <- function(dataSET, issues = c("Hole", "hole", "mussel", "Holr", "Shell", "Mussel", "edge of hole", "hole next to mussel"), ...){
+  issues <- c(issues, ...) # add new issue notes if needed.
+
+  issuepins <- set_check_pins(dataSET, issues) # returns a vector of items to flag
 
   SET_data <- dataSET %>%
-    dplyr::mutate(bigIssuePin = pin_ID %in% probs$pin_ID) %>% # Add in a column indicating if that pin is on the list of issues
-    dplyr::filter(bigIssuePin == FALSE, Date != '2008-08-08') %>% # Remove initial readings from AH as they were throwing errors and erraneous rates.
-    dplyr::group_by(pin_ID) %>% # reinforce that the grouping is based on pins
-    dplyr::arrange(Date) %>%
-    dplyr::mutate(Change = as.numeric(Raw) - as.numeric(Raw[1]),
-           incrementalChange = c(NA, diff(Change))) %>%
-    dplyr::select(Site_Name, Plot_Name, Arm_Direction, Pin_number, Date, SET_Reader, Raw, incrementalChange, issuePin, bigIssuePin)
+    # Add in a column indicating if that pin is on the list of issues
+    # also add a column if the measure had a note that is in list provided.
+    dplyr::mutate(issuePin = pin_ID %in% issuepins,
+                  issuemeasure = Notes %in% issues)
+
+  attr(SET_data, which = "Data check info") <- attr(x = issuepins, which = "Data check info", exact = TRUE) #TODO: make this report out what was provided in the issues argument.
+
 
   return(SET_data)
 
@@ -115,32 +119,36 @@ set_check_measures <- function(dataSET){
 #' @param duration character string of the time interval to use for threshold calculation; "1 year" default.
 #' Leverages `lubridate` capability to parse duration so values such as "1 week" and "10 months" are acceptable.
 #' @param mm_change Change in pin height over the duration provided. Values greater than this (within the specified
-#' duration) will be given a flag.
+#' duration) will be given a flag. Note: the reported change in the data is converted to an absolute change to
+#' capture both an increase and a decrease in the measured values.
 #' @param dataSET SET data as returned by set_get_sets.
 #' @param drop_rows TRUE, drops rows that don't meet the flag criteria. To return the full dataset, with
 #' an appended column of flag set to FALSE. Defaults to FALSE to protect unwanted removal.
 #'
 #' @return tibble of SET data that's been trimmed down to show only measures that were made that fell above the
-#' the treshold passed in the function call.
+#' the threshold passed in the function call.
 #' @export
 #'
-#' @examples set_check_change(dataSET = NULL, duration = "3 months", mm_change = 5) # > 5 mm change over 3 months will
+#' @examples
 
 set_check_change <- function(dataSET, duration = "1 year", mm_change = 20, drop_rows = FALSE){
 
   dec_year <-  lubridate::duration(duration)/lubridate::dyears(1)
-  threshold <- mm_change / dec_year
+  threshold <- abs(mm_change) / dec_year
 
   SET_data <-
-    dataSET %>% dplyr::mutate(
-      chng_thresh = (incrementalChange / incrementalTime),
+    dataSET %>%
+    dplyr::mutate(
+      chng_thresh = (abs(incrementalChange) / incrementalTime),
       flag_change = dplyr::case_when(
         chng_thresh == -Inf ~ FALSE,
         chng_thresh == Inf ~ FALSE,
         chng_thresh > threshold ~ TRUE,
         TRUE ~ FALSE
-      )
-    ) %>% dplyr::select(Site_Name:Arm_Direction, Date:issuePin, chng_thresh, flag_change)
+      ),
+      change_message = paste("Change greater than ", mm_change, " mm in ", duration)
+    ) %>%
+    dplyr::select(Site_Name:Arm_Direction, Date:issuePin, chng_thresh, flag_change, change_message)
 
   if(drop_rows) {
     SET_data <- SET_data %>% dplyr::filter(flag_change)}
@@ -149,7 +157,7 @@ set_check_change <- function(dataSET, duration = "1 year", mm_change = 20, drop_
   }
 
 
-  attr(SET_data, 'Datainfo') <-"Tibble of non-numeric recorded values" # give dataframe some metadata attributes
+  attr(SET_data, 'Data QA flag') <-paste("Data flagged for measures exceeding ", mm_change, " mm over ", duration) # give dataframe some metadata attributes
   attr(SET_data, 'Date of data retreival') <- format(lubridate::today(), '%b %d %Y')
 
   return(SET_data)

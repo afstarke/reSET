@@ -228,7 +228,7 @@ set_get_samplingevents <- function(dbconn){
 #' @return tibble containing SET data in long format
 #' @export
 #' @examples
-#' # ADD_EXAMPLES_HERE
+#'
 #'
 set_get_sets <- function(dbconn, ...) {
   if (!DBI::dbIsValid(dbconn)) {
@@ -314,7 +314,7 @@ set_get_sets <- function(dbconn, ...) {
     dplyr::mutate(Raw = as.numeric(Raw)) %>%
     dplyr::filter(!is.na(Raw))
 
-  pins <- set_check_pins(SET.data.long, issues = ...) # change the approach to give a message saying that there are issues with some pins as ided in set_check_pins
+  # pins <- set_check_pins(SET.data.long, issues = ...) # change the approach to give a message saying that there are issues with some pins as ided in set_check_pins
 
   SET.data.long <- SET.data.long %>%
     dplyr::ungroup() %>%
@@ -322,8 +322,8 @@ set_get_sets <- function(dbconn, ...) {
     dplyr::arrange(Date) %>%
     dplyr::mutate(Change = as.numeric(Raw) - as.numeric(Raw[1])) %>%
     dplyr::mutate(incrementalChange = c(NA, diff(Change))) %>%
-    dplyr::mutate(incrementalTime = DecYear - dplyr::lag(DecYear, n = 1)) %>%
-    dplyr::mutate(issuePin = pin_ID %in% pins) # TODO: drop this column creation when new methods of flagging established.
+    dplyr::mutate(incrementalTime = DecYear - dplyr::lag(DecYear, n = 1)) #%>%
+    # dplyr::mutate(issuePin = pin_ID %in% pins) # TODO: drop this column creation when new methods of flagging established.
 
   attr(SET.data.long, 'Datainfo') <-"Full SET dataset including all measures in a LONG format" # give dataframe some metadata attributes
   attr(SET.data.long, 'Date of data retreival') <- format(lubridate::today(), '%b %d %Y')
@@ -382,6 +382,7 @@ set_get_accretions <- function(dbconn){
 }
 
 
+
 #' set_get_pinlengths
 #'
 #' @param pin_numb numeric pin number most often passed in from an assigned
@@ -403,6 +404,7 @@ set_get_pinlengths <- function(pin_numb, pin_table){
   # TODO: Need to find a good way to create named vector of pin lengths.
   return(pin_table[[pin_numb]])
 }
+
 
 
 #' set_get_receiver_elevations
@@ -483,3 +485,5 @@ set_get_doublereads <- function(dataSET){
     dplyr::filter(urdid %in% doubleids)
 
 }
+
+# set_get_set_rates

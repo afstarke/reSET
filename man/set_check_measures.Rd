@@ -15,12 +15,12 @@ set_check_measures(
 \item{dataSET}{SET data from set_get_sets}
 }
 \value{
-tibble containing SET data in long format
+tibble containing SET data with columns
 }
 \description{
-returns a list of measures that have issues indicated in the notes or has
-suspicious incremental changes. These are individual measurements and differ from
-set_check_pins which returns pin_id for flagging an entire set of pin reads for a station direction.
+returns a tibble of set data that includes columns indicating potential issues with the measurements
+made as indicated in the notes and a flag for any pins that had issues at any point in time as provided
+by the set_check_pins function.
 }
 \examples{
 NULL

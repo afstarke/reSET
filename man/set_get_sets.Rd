@@ -15,7 +15,3 @@ tibble containing SET data in long format
 \description{
 return a tidy, long form, tibble of raw SET measurement data.
 }
-\examples{
-# ADD_EXAMPLES_HERE
-
-}

@@ -77,13 +77,13 @@ set_check_pins <- function(dataSET, issues = c("Hole", "hole", "mussel", "Holr",
 
 #' set_check_measures
 #'
-#' returns a list of measures that have issues indicated in the notes or has
-#' suspicious incremental changes. These are individual measurements and differ from
-#' set_check_pins which returns pin_id for flagging an entire set of pin reads for a station direction.
+#' returns a tibble of set data that includes columns indicating potential issues with the measurements
+#' made as indicated in the notes and a flag for any pins that had issues at any point in time as provided
+#' by the set_check_pins function.
 #'
 #' @param dataSET SET data from set_get_sets
 #'
-#' @return tibble containing SET data in long format
+#' @return tibble containing SET data with columns
 #' @export
 #' @examples NULL
 #'
@@ -110,7 +110,8 @@ set_check_measures <- function(dataSET, issues = c("Hole", "hole", "mussel", "Ho
 
 
 
-#' set_check_change
+#' set_check_changes
+#'
 #' Calculates the rate of change from provided change in time and change in pin height.
 #' Used for flagging and catching potential errors. Replaces the more simple incremental change
 #' approach with one that allows for larger gaps in the data. Perhaps also catches more potential
@@ -131,24 +132,32 @@ set_check_measures <- function(dataSET, issues = c("Hole", "hole", "mussel", "Ho
 #'
 #' @examples
 
-set_check_change <- function(dataSET, duration = "1 year", mm_change = 20, drop_rows = FALSE){
+set_check_changes <- function(dataSET, duration = "1 year", mm_change = 20, drop_rows = FALSE, issues = c("Hole", "hole", "mussel", "Holr", "Shell", "Mussel", "edge of hole", "hole next to mussel"), ...){
+
+  issues <- c(issues, ...) # add new issue notes if needed.
+  set_data1 <- set_check_measures(dataSET, issues)
 
   dec_year <-  lubridate::duration(duration)/lubridate::dyears(1)
   threshold <- abs(mm_change) / dec_year
 
   SET_data <-
-    dataSET %>%
+    set_data1 %>%
     dplyr::mutate(
-      chng_thresh = (abs(incrementalChange) / incrementalTime),
+      chng_rate = (abs(incrementalChange) / incrementalTime),
       flag_change = dplyr::case_when(
-        chng_thresh == -Inf ~ FALSE,
-        chng_thresh == Inf ~ FALSE,
-        chng_thresh > threshold ~ TRUE,
-        TRUE ~ FALSE
-      ),
-      change_message = paste("Change greater than ", mm_change, " mm in ", duration)
+        chng_rate == -Inf ~ FALSE,
+        chng_rate == Inf ~ FALSE,
+        chng_rate > threshold ~ TRUE,
+        TRUE ~ FALSE),
+      change_message = ifelse(flag_change == TRUE,
+                              yes = paste("Change greater than ", mm_change, " mm in ", duration),
+                              no = "below change threshold")
     ) %>%
-    dplyr::select(Site_Name:Arm_Direction, Date:issuePin, chng_thresh, flag_change, change_message)
+    # care must be taken here to recalculate the measured changes after potentially removing some measures.
+    # drop those columns that calculated changes for use in the QA process.
+    dplyr::select(Site_Name:Arm_Direction, Date:DecYear, issuePin, issuemeasure, chng_rate, flag_change, change_message)
+
+  attr(SET_data, which = "Data check info") <- attr(x = dataSET, which = "Data check info", exact = TRUE)
 
   if(drop_rows) {
     SET_data <- SET_data %>% dplyr::filter(flag_change)}
@@ -166,6 +175,8 @@ set_check_change <- function(dataSET, duration = "1 year", mm_change = 20, drop_
 
 
 
+#' Check double reads
+#'
 #' Check set data for potential biases in SET reader through a graphical and
 #' optional tabular format
 #' @description Used in conjunction with set_get_doublereads

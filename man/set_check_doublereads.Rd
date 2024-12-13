@@ -2,8 +2,7 @@
 % Please edit documentation in R/set_check.R
 \name{set_check_doublereads}
 \alias{set_check_doublereads}
-\title{Check set data for potential biases in SET reader through a graphical and
-optional tabular format}
+\title{Check double reads}
 \usage{
 set_check_doublereads(dataSET)
 }
@@ -15,4 +14,8 @@ set_check_doublereads(dataSET)
 }
 \description{
 Used in conjunction with set_get_doublereads
+}
+\details{
+Check set data for potential biases in SET reader through a graphical and
+optional tabular format
 }

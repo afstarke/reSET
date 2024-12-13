@@ -2,7 +2,7 @@
 
 export("%>%")
 export(get_pinhts)
-export(set_check_change)
+export(set_check_changes)
 export(set_check_doublereads)
 export(set_check_measures)
 export(set_check_notes)

@@ -487,3 +487,13 @@ set_get_doublereads <- function(dataSET){
 }
 
 # set_get_set_rates
+# TODO: Determine sequence and name of funtion
+# Need to take in set data that's been filtered
+# recalculate the change between succesive measures (incremental change)
+# recalculate the cumulative change
+# get marsh elevations (this may be an issue for site that don't have these measures)
+# /\use set_get_absolute_heights
+# add SETreader grouping to calculate change within a individual SET reader
+# calculate the mean marsh elevation at the start - used in one model
+#
+#

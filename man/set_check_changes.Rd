@@ -15,7 +15,8 @@ set_check_changes(
 )
 }
 \arguments{
-\item{dataSET}{SET data as returned by set_get_sets.}
+\item{dataSET}{SET data as returned by set_get_sets with calculated changes removed (only raw measures remain)
+to allow for recalculating incremental changes around any QA processes that removed readings from the workflows.}
 
 \item{duration}{character string of the time interval to use for threshold calculation; "1 year" default.
 Leverages \code{lubridate} capability to parse duration so values such as "1 week" and "10 months" are acceptable.}

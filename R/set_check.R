@@ -122,7 +122,8 @@ set_check_measures <- function(dataSET, issues = c("Hole", "hole", "mussel", "Ho
 #' @param mm_change Change in pin height over the duration provided. Values greater than this (within the specified
 #' duration) will be given a flag. Note: the reported change in the data is converted to an absolute change to
 #' capture both an increase and a decrease in the measured values.
-#' @param dataSET SET data as returned by set_get_sets.
+#' @param dataSET SET data as returned by set_get_sets with calculated changes removed (only raw measures remain)
+#' to allow for recalculating incremental changes around any QA processes that removed readings from the workflows.
 #' @param drop_rows TRUE, drops rows that don't meet the flag criteria. To return the full dataset, with
 #' an appended column of flag set to FALSE. Defaults to FALSE to protect unwanted removal.
 #'

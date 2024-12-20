@@ -35,7 +35,7 @@ NULL
 #' @examples
 #'
 #'
-set_pinhts <- function(n_pins = 9){
+set_pinhts <- function(n_pins = 9, filepath = "pin_height_list.rds"){
 
   if(!is.numeric(n_pins)){
     stop("Must provide an integer value for the number of pins your SET arm contains (9 is most common)")
@@ -61,7 +61,7 @@ set_pinhts <- function(n_pins = 9){
     names(vec)[i] <-  names(pin)
   }
 
-  readr::write_rds(x = vec, file = "pin_height_list.rds")
+  readr::write_rds(x = vec, file = filepath)
   return(vec)
 }
 
@@ -80,6 +80,8 @@ get_pinhts <- function(path = "pin_height_list.rds"){
 
   return(pin_heights)
 }
+
+
 
 
 

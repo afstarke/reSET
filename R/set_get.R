@@ -320,8 +320,8 @@ set_get_sets <- function(dbconn, ...) {
     dplyr::ungroup() %>%
     dplyr::group_by(pin_ID) %>% # reinforce that the grouping is based on pins
     dplyr::arrange(Date) %>%
-    dplyr::mutate(Change = as.numeric(Raw) - as.numeric(Raw[1])) %>%
-    dplyr::mutate(incrementalChange = c(NA, diff(Change))) %>%
+    dplyr::mutate(cum_change = as.numeric(Raw) - as.numeric(Raw[1])) %>%
+    dplyr::mutate(incrementalChange = c(NA, diff(cum_change))) %>%
     dplyr::mutate(incrementalTime = DecYear - dplyr::lag(DecYear, n = 1)) #%>%
     # dplyr::mutate(issuePin = pin_ID %in% pins) # TODO: drop this column creation when new methods of flagging established.
 
@@ -396,12 +396,13 @@ set_get_accretions <- function(dbconn){
 #' @examples
 
 
+
 set_get_pinlengths <- function(pin_numb, pin_table){
   #TODO: add standard checks in R functions. Not sure this is the best method
   if(!is.numeric(pin_numb)){
     warning("Provide valid pin number")
   }
-  # TODO: Need to find a good way to create named vector of pin lengths.
+  # TODO: Determine if this approach should be completely abandoned for tibble approach.
   return(pin_table[[pin_numb]])
 }
 
@@ -463,6 +464,7 @@ set_get_absolute_heights <- function(pin_height, pin_numb, pin_table, SETarmHt, 
   return(absHt)
 }
 
+
 #' TODO: Redefine the intent behind the set_get_doublereads. Alternative
 #' approach would be to just correct all data. ' Check data for double reads. '
 #' Investigate if and when a double read of a SET occurs. The result can be used
@@ -486,14 +488,32 @@ set_get_doublereads <- function(dataSET){
 
 }
 
-# set_get_set_rates
-# TODO: Determine sequence and name of funtion
-# Need to take in set data that's been filtered
-# recalculate the change between succesive measures (incremental change)
-# recalculate the cumulative change
-# get marsh elevations (this may be an issue for site that don't have these measures)
-# /\use set_get_absolute_heights
-# add SETreader grouping to calculate change within a individual SET reader
-# calculate the mean marsh elevation at the start - used in one model
-#
-#
+
+
+#' read in SET equipment file
+#'
+#' SET arm vertical offset (height from receiver) and pin lengths vary depending on
+#' the equipment used. To manage for this and adjust as needed depending on the readers
+#' equipment. Complicating matters, some equipment changes within a site's time series.
+#' To accommodate this a separate table is read-in which contains the set arm height and
+#' the pin lengths for each set equipment (with a unique equipment_id field) that will be
+#' matched up to the reading through a joining process.
+#'
+#' @param filepath
+#'
+#' @returns tibble for use in left_joins to the raw data. The field within this output will
+#' provide values for a calculation that will adjust the raw measured values into a standard
+#' height (NAVD88) that will be used in the \code{\link{set_get_absolute_heights}}
+#' @export
+#'
+#' @examples
+set_get_equipment_tbl <- function(filepath){
+
+  set_equipment <- readxl::read_excel(filepath)
+
+  set_equipment %>%
+    dplyr::mutate(pin_vect = pmap(select(., c(`1`, `2`, `3`,`4`, `5`, `6`, `7`, `8`, `9`)), ~c(...))) %>%
+    dplyr::select(equipment_id, set_arm_ht, pin_vect)
+
+
+}

@@ -4,7 +4,7 @@
 \alias{set_pinhts}
 \title{Utility to create pin height vector table (named vector) using prompts.}
 \usage{
-set_pinhts(n_pins = 9)
+set_pinhts(n_pins = 9, filepath = "pin_height_list.rds")
 }
 \arguments{
 \item{n_pins}{}

@@ -156,7 +156,7 @@ set_check_changes <- function(dataSET, duration = "1 year", mm_change = 20, drop
     ) %>%
     # care must be taken here to recalculate the measured changes after potentially removing some measures.
     # drop those columns that calculated changes for use in the QA process.
-    dplyr::select(Site_Name:Arm_Direction, Date:DecYear, issuePin, issuemeasure, chng_rate, flag_change, change_message)
+    dplyr::select(Site_Name:Arm_Direction, Location_ID, Position_ID, Date:DecYear, issuePin, issuemeasure, chng_rate, flag_change, change_message)
 
   attr(SET_data, which = "Data check info") <- attr(x = dataSET, which = "Data check info", exact = TRUE)
 

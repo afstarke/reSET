@@ -41,6 +41,7 @@ set_calc_changes <- function(dataSET){
       cum_change = as.numeric(Raw) - as.numeric(Raw[1]),
       incrementalChange = c(NA, diff(cum_change)),
       incrementalTime = DecYear - dplyr::lag(DecYear, n = 1),
+      inc_setreader_elev = marsh_elevation - lag(marsh_elevation, n = 1, order_by = Date),
       # create a flag for when a new SET reader is introduced.
       newsetreader = if_else(
         SET_Reader == lag(SET_Reader), # tests if the SET reader is the same from the previous reading
@@ -60,7 +61,8 @@ set_calc_changes <- function(dataSET){
 
     group_by(pin_ID) %>%
     # calculate the cumulative change within each SET readers data.
-    mutate(cum_change_setreader = cumsum(replace_na(inc_setreader, 0))) %>%
+    mutate(cum_change_setreader = cumsum(replace_na(inc_setreader, 0)),
+           cum_change_setreader_elevation = cumsum(replace_na(inc_setreader_elev, 0))) %>%
 
     `attr<-`(attr(x = dataSET, which = "File last updated", exact = F), which = "File last updated")
 }

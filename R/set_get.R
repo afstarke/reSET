@@ -130,21 +130,8 @@ set_get_stations <- function(dbconn, epsg = 4269) {
     dplyr::select(reprojected_stations) %>%
     tidyr::unnest(reprojected_stations) %>%
     sf::st_as_sf() %>%
-    sf::st_set_crs(epsg) %>%
-    dplyr::select(
-      Site_Name,
-      Site_ID, # need Site_ID for joining to accretion data - investigate further.
-      Site_Desc,
-      Unit_Code,
-      site_established_by = Unit_Type,
-      Location_ID,
-      Stratafication,
-      Plot_Name,
-      SET_Established_Date,
-      Depth_of_Pipe,
-      SET_Type,
-      geometry
-    )
+    sf::st_set_crs(epsg) 
+    
 
 
 

@@ -89,7 +89,7 @@ set_get_stations <- function(dbconn, epsg = 4269) {
   # 1 in the survey form and 1 in the site location data.
   # Could pull all data from survey forms and average elevations and height- or do
   # that internally in the DB and then pull that value from station info.
-  # Elevations <- dbconn %>% tbl("tbl_Survey_Data")
+  # Elevations <- dbconn %>% tbl("tbl_Survey_Data") # this may need to be reenvocked to pull in better location data. 
 
   StudyStations <- Sites %>%
     dplyr::left_join(Locations, by = "Site_ID") %>%
@@ -131,18 +131,19 @@ set_get_stations <- function(dbconn, epsg = 4269) {
     tidyr::unnest(reprojected_stations) %>%
     sf::st_as_sf() %>%
     sf::st_set_crs(epsg) %>%
-    dplyr::select(Site_Name, 
-      Site_Desc, 
-      Unit_Code, 
+    dplyr::select(
+      Site_Name,
+      Site_ID, # need Site_ID for joining to accretion data - investigate further.
+      Site_Desc,
+      Unit_Code,
       site_established_by = Unit_Type,
-      Location_ID, 
-      Stratafication, 
-      Plot_Name, 
+      Location_ID,
+      Stratafication,
+      Plot_Name,
       SET_Established_Date,
       Depth_of_Pipe,
-      SET_Type, 
+      SET_Type,
       geometry
-
     )
 
 

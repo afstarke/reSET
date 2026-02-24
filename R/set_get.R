@@ -6,7 +6,7 @@
 # DONE: set_get_stations return sf object with meta data on
 # the station including elevation?
 # set_get_readers returns basic dataframe of SET readers
-# DONE: set_get_samplingevents
+# DONE: set_get_samplinzgevents
 # DONE: set_get_sets
 # DONE: set_get_accretions
 # set_get_pinlengths
@@ -122,11 +122,28 @@ set_get_stations <- function(dbconn, epsg = 4269) {
     rowwise() %>%
     dplyr::mutate(
       projected_stations = list(sf::st_set_crs(x = stations, sf::st_crs(wkt))),
-      reprojected_stations = list(sf::st_transform(x = projected_stations, epsg))) %>%
+      reprojected_stations = list(sf::st_transform(
+        x = projected_stations,
+        epsg
+      ))
+    ) %>%
     dplyr::select(reprojected_stations) %>%
     tidyr::unnest(reprojected_stations) %>%
     sf::st_as_sf() %>%
-    sf::st_set_crs(epsg)
+    sf::st_set_crs(epsg) %>%
+    dplyr::select(Site_Name, 
+      Site_Desc, 
+      Unit_Code, 
+      site_established_by = Unit_Type,
+      Location_ID, 
+      Stratafication, 
+      Plot_Name, 
+      SET_Established_Date,
+      Depth_of_Pipe,
+      SET_Type, 
+      geometry
+
+    )
 
 
 
